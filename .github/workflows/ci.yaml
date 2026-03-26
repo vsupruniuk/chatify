@@ -1,0 +1,58 @@
+name: Pull requests CI
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 24.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Create .env
+        shell: bash
+        env:
+          ENVIRONMENT_VARIABLES: ${{ secrets.ENV }}
+        run: |
+          umask 077
+          printf '%s\n' "$ENVIRONMENT_VARIABLES" > .env
+          chmod 600 .env
+
+      - name: Load env variables
+        shell: bash
+        run: |
+          sed -E '/^\s*($|#)/d' .env >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint:ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Coverage tests
+        run: npm run test:cov
+
+      - name: Build
+        run: npm run build
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9 # v7.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
