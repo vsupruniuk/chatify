@@ -1,32 +1,71 @@
 {
-  "name": "chatify",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
-  "private": true,
-  "packageManager": "npm@11.10.0",
-  "dependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/compiler": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "@angular/forms": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
-    "@angular/router": "^21.2.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
-  },
-  "devDependencies": {
-    "@angular/build": "^21.2.1",
-    "@angular/cli": "^21.2.1",
-    "@angular/compiler-cli": "^21.2.0",
-    "jsdom": "^28.0.0",
-    "prettier": "^3.8.1",
-    "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
-  }
+	"name": "chatify",
+	"version": "0.1.0",
+	"description": "Angular-based chatting application. Provides capabilities like authorization and encrypted chats between users with real-time features",
+	"author": "Vladyslav Supruniuk",
+	"private": false,
+	"license": "MIT",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vsupruniuk/chatify"
+	},
+	"scripts": {
+		"ng": "ng",
+		"start": "ng serve",
+		"build": "ng build",
+		"watch": "ng build --watch --configuration development",
+		"test:cov": "jest --coverage --runInBand",
+		"test:unit": "jest --runInBand --coverage=false",
+		"lint": "ng lint && npx stylelint \"src/**/*.scss\" --fix",
+		"lint:ci": "ng lint && npx stylelint \"src/**/*.scss\"",
+		"format": "prettier --write \"src/**/*.ts\"",
+		"type-check": "tsc",
+		"prepare": "husky install"
+	},
+	"dependencies": {
+		"@angular/common": "21.2.6",
+		"@angular/compiler": "21.2.6",
+		"@angular/core": "21.2.6",
+		"@angular/forms": "21.2.6",
+		"@angular/platform-browser": "21.2.6",
+		"@angular/router": "21.2.6",
+		"rxjs": "7.8.2",
+		"tslib": "2.8.1"
+	},
+	"devDependencies": {
+		"@angular/build": "21.2.4",
+		"@angular/cli": "21.2.4",
+		"@angular/compiler-cli": "21.2.6",
+		"@eslint/js": "10.0.1",
+		"@stylistic/stylelint-plugin": "5.0.1",
+		"@testing-library/angular": "19.2.1",
+		"@testing-library/dom": "10.4.1",
+		"@testing-library/jest-dom": "6.9.1",
+		"@types/jest": "30.0.0",
+		"angular-eslint": "21.3.1",
+		"eslint": "10.1.0",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-plugin-prettier": "5.5.5",
+		"eslint-plugin-unicorn": "63.0.0",
+		"husky": "9.1.7",
+		"jest": "30.3.0",
+		"jest-environment-jsdom": "30.3.0",
+		"jest-preset-angular": "16.1.1",
+		"jiti": "2.6.1",
+		"prettier": "3.8.1",
+		"stylelint": "17.6.0",
+		"stylelint-config-clean-order": "8.0.1",
+		"stylelint-config-standard-scss": "17.0.0",
+		"stylelint-order": "8.1.1",
+		"ts-jest": "29.4.6",
+		"ts-node": "10.9.2",
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.57.2"
+	},
+	"overrides": {
+		"glob": "13.0.6",
+		"jsdom": "29.0.1",
+		"picomatch": "4.0.4"
+	}
 }

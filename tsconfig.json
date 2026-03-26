@@ -1,33 +1,59 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "preserve"
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  },
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+	"compileOnSave": false,
+	"compilerOptions": {
+		"module": "preserve",
+		"declaration": true,
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"strictFunctionTypes": true,
+		"useDefineForClassFields": false,
+		"noImplicitOverride": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"noPropertyAccessFromIndexSignature": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"skipLibCheck": true,
+		"isolatedModules": false,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"incremental": true,
+		"target": "ESNext",
+		"typeRoots": ["./node_modules/@types", "./src/types"],
+		"paths": {
+			"@components/*": ["src/components/*"],
+			"@components": ["src/components/index"],
+
+			"@configs/*": ["src/configs/*"],
+			"@configs": ["src/configs/index"],
+
+			"@containers/*": ["src/containers/*"],
+			"@containers": ["src/containers/index"],
+
+			"@customTypes/*": ["src/types/*"],
+			"@customTypes": ["src/types/index"],
+
+			"@enums/*": ["src/enums/*"],
+			"@enums": ["src/enums/index"],
+
+			"@helpers/*": ["src/helpers/*"],
+			"@helpers": ["src/helpers/index"],
+
+			"@pages/*": ["src/pages/*"],
+			"@pages": ["src/pages/index"],
+
+			"@services/*": ["src/services/*"],
+			"@services": ["src/services/index"]
+		}
+	},
+	"angularCompilerOptions": {
+		"enableI18nLegacyMessageIdFormat": false,
+		"strictInjectionParameters": true,
+		"strictInputAccessModifiers": true,
+		"strictTemplates": true
+	},
+	"exclude": ["dist", "node_modules"]
 }
