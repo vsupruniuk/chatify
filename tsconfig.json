@@ -17,10 +17,11 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"skipLibCheck": true,
-		"isolatedModules": false,
+		"isolatedModules": true,
 		"experimentalDecorators": true,
 		"importHelpers": true,
 		"incremental": true,
+		"resolveJsonModule": true,
 		"target": "ESNext",
 		"typeRoots": ["./node_modules/@types", "./src/types"],
 		"paths": {
