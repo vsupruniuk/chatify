@@ -14,7 +14,7 @@ import { HelloWorldService } from '@services';
 	templateUrl: './helloWorldTitlee.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HelloWorldTitle implements OnInit {
+export class HelloWorldTitlee implements OnInit {
 	private readonly _helloWorldService: HelloWorldService = inject(HelloWorldService);
 
 	protected readonly title: WritableSignal<string> = signal<string>('');
