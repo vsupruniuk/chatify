@@ -4,7 +4,6 @@
 		"module": "preserve",
 		"declaration": true,
 		"removeComments": true,
-		"emitDecoratorMetadata": true,
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
 		"strictFunctionTypes": true,
