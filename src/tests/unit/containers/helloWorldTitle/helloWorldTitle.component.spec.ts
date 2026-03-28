@@ -1,11 +1,27 @@
-import { render, screen } from '@testing-library/angular';
+import { TestBed } from '@angular/core/testing';
 
 import { HelloWorldTitle } from '@containers';
 
 describe('Hello world title', (): void => {
-	it('should render title', async () => {
-		await render(HelloWorldTitle);
+	let nativeElement: HTMLElement;
 
-		expect(screen.getByTestId('hello-world-header')).toHaveTextContent('Hello, World!');
+	beforeEach(async (): Promise<void> => {
+		await TestBed.configureTestingModule({
+			imports: [HelloWorldTitle],
+		}).compileComponents();
+
+		const fixture = TestBed.createComponent(HelloWorldTitle);
+		nativeElement = fixture.nativeElement;
+
+		await fixture.whenStable();
+		fixture.detectChanges();
+	});
+
+	it('should render title', () => {
+		const element: HTMLHeadingElement = nativeElement.querySelector(
+			'[data-testid="hello-world-header"]',
+		) as HTMLHeadingElement;
+
+		expect(element.textContent).toBe('Hello, World!');
 	});
 });
