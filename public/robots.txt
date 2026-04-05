@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+Allow: /signup
+Sitemap: https://chatify-messanger.com/sitemap.xml
