@@ -1,5 +1,5 @@
-import * as path from 'path';
-import * as fs from 'fs';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 
 interface ILocationPosition {
 	line: number;
@@ -32,15 +32,14 @@ const parsedCoverage: CoverageMap = JSON.parse(rawCoverage);
 
 const xmlLines: string[] = [];
 
-xmlLines.push(xmlHeader);
-xmlLines.push(coverageOpenTag);
+xmlLines.push(xmlHeader, coverageOpenTag);
 
 for (const [filePath, fileCoverage] of Object.entries(parsedCoverage)) {
 	if (!filePath.endsWith('.html')) {
 		continue;
 	}
 
-	const relativePath: string = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
+	const relativePath: string = path.relative(process.cwd(), filePath).replaceAll('\\', '/');
 
 	const lines = new Map<number, boolean>();
 

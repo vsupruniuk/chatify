@@ -49,6 +49,9 @@ jobs:
       - name: Coverage tests
         run: npm run test:cov
 
+      - name: Transform HTML files coverage
+        run: npm run convert-coverage
+
       - name: Build
         run: npm run build
 

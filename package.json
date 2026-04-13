@@ -15,7 +15,7 @@
 		"start": "ng serve",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
-		"test:cov": "jest --coverage --runInBand && npm run convert-coverage",
+		"test:cov": "jest --coverage --runInBand",
 		"test:unit": "jest --runInBand --coverage=false",
 		"lint": "ng lint && npx stylelint \"src/**/*.scss\" --fix",
 		"lint:ci": "ng lint && npx stylelint \"src/**/*.scss\"",
