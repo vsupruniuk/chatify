@@ -15,13 +15,14 @@
 		"start": "ng serve",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
-		"test:cov": "jest --coverage --runInBand",
+		"test:cov": "jest --coverage --runInBand && convert-coverage",
 		"test:unit": "jest --runInBand --coverage=false",
 		"lint": "ng lint && npx stylelint \"src/**/*.scss\" --fix",
 		"lint:ci": "ng lint && npx stylelint \"src/**/*.scss\"",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"type-check": "tsc",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"convert-coverage": "ts-node scripts/convertHtmlCoverageToSonar.ts"
 	},
 	"dependencies": {
 		"@angular/common": "21.2.6",
