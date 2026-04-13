@@ -2,12 +2,19 @@ import { Routes } from '@angular/router';
 
 import { PageTitle, Route } from '@enums';
 
-import { HelloWorldPage } from '@pages';
-
 export const routesConfig: Routes = [
 	{
-		path: Route.HELLO_WORLD,
-		component: HelloWorldPage,
-		title: PageTitle.HELLO_WORLD,
+		path: '',
+		pathMatch: 'full',
+		redirectTo: Route.SIGNUP,
+	},
+	{
+		path: Route.SIGNUP,
+		title: PageTitle.SIGNUP,
+		loadComponent: async () => {
+			const module = await import('@pages/signup/signupPage.component');
+
+			return module.SignupPage;
+		},
 	},
 ];
