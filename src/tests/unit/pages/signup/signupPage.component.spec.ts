@@ -1,24 +1,23 @@
 import { TestBed } from '@angular/core/testing';
+import { SignupPage } from '@pages';
 
-import { AppComponent } from '../../../app.component';
-
-describe('App component', (): void => {
+describe('Signup page component', (): void => {
 	let nativeElement: HTMLElement;
 
 	beforeEach(async (): Promise<void> => {
 		await TestBed.configureTestingModule({
-			imports: [AppComponent],
+			imports: [SignupPage],
 		}).compileComponents();
 
-		const fixture = TestBed.createComponent(AppComponent);
+		const fixture = TestBed.createComponent(SignupPage);
 		nativeElement = fixture.nativeElement;
 
 		await fixture.whenStable();
 		fixture.detectChanges();
 	});
 
-	it('should render router outlet', (): void => {
-		const child: Element | null = nativeElement.querySelector('router-outlet');
+	it('should render signup page container', (): void => {
+		const child: Element | null = nativeElement.querySelector('ctf-signup-container');
 
 		expect(child).not.toBeNull();
 	});
