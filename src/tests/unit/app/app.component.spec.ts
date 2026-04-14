@@ -17,7 +17,7 @@ describe('App component', (): void => {
 		fixture.detectChanges();
 	});
 
-	it('should render router outlet', () => {
+	it('should render router outlet', (): void => {
 		const child: Element | null = nativeElement.querySelector('router-outlet');
 
 		expect(child).not.toBeNull();

@@ -21,7 +21,8 @@
 		"lint:ci": "ng lint && npx stylelint \"src/**/*.scss\"",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"type-check": "tsc",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"convert-coverage": "ts-node scripts/convertHtmlCoverageToSonar.ts"
 	},
 	"dependencies": {
 		"@angular/common": "21.2.6",
