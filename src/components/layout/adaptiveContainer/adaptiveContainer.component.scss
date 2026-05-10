@@ -1,0 +1,12 @@
+@use "styles/shared/mixins";
+@use "styles/shared/variables";
+
+.adaptive-container {
+  width: 100%;
+
+  @include mixins.tablet {
+    border: 1px solid variables.$color-adaptive-container-border;
+    border-radius: 1rem;
+    outline: 0.5rem solid variables.$color-adaptive-container-outline;
+  }
+}
