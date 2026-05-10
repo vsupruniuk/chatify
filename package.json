@@ -1,6 +1,6 @@
 {
 	"name": "chatify",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Angular-based chatting application. Provides capabilities like authorization and encrypted chats between users with real-time features",
 	"author": "Vladyslav Supruniuk",
 	"private": false,
