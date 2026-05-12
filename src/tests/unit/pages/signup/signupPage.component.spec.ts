@@ -16,7 +16,14 @@ describe('Signup page component', (): void => {
 		fixture.detectChanges();
 	});
 
-	it('should render signup page container', (): void => {
+	it('should render top level element as tag main', (): void => {
+		const child: Element | null = nativeElement.querySelector('[data-testid="signup-page"]');
+
+		expect(child).not.toBeNull();
+		expect(child?.tagName).toBe('MAIN');
+	});
+
+	it('should render signup container', (): void => {
 		const child: Element | null = nativeElement.querySelector('ctf-signup-container');
 
 		expect(child).not.toBeNull();
