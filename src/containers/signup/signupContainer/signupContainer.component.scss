@@ -1,0 +1,28 @@
+@use "/styles/shared/mixins";
+
+.signup-container {
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  @include mixins.tablet {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+
+  @include mixins.desktop {
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+  }
+
+  &-wrapper {
+    width: 100%;
+    max-width: 45rem;
+    margin: 0 auto;
+  }
+
+  &-auth {
+    @include mixins.tablet {
+      padding: 1.5rem;
+    }
+  }
+}
