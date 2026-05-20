@@ -5,4 +5,4 @@ import { routesConfig } from '@configs';
 
 export const appConfig: ApplicationConfig = {
 	providers: [provideRouter(routesConfig)],
-};
+} as const;

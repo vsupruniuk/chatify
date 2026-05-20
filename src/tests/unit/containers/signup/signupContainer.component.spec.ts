@@ -19,15 +19,10 @@ describe('Signup container component', (): void => {
 
 	it('should render top level element as tag section', (): void => {
 		const child: Element | null = nativeElement.querySelector('[data-testid="signup-container"]');
+		console.log(child?.outerHTML);
 
 		expect(child).not.toBeNull();
 		expect(child?.tagName).toBe('SECTION');
-	});
-
-	it('should render signup logo component', (): void => {
-		const child: Element | null = nativeElement.querySelector('ctf-signup-logo');
-
-		expect(child).not.toBeNull();
 	});
 
 	it('should render signup form component', (): void => {

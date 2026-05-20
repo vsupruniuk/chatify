@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+
 import { SignupPage } from '@pages';
 
 describe('Signup page component', (): void => {
