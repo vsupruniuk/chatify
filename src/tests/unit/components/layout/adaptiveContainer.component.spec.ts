@@ -1,11 +1,17 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+
+import {
+	IMockBuilderExtended,
+	MockBuilder,
+	MockedComponentFixture,
+	MockedDebugElement,
+	MockRender,
+	ngMocks,
+} from 'ng-mocks';
 
 import { AdaptiveContainer } from '@components/layout';
 
 describe('Signup container component', (): void => {
-	let nativeElement: HTMLElement;
-
 	@Component({
 		selector: 'ctf-test-host',
 		imports: [AdaptiveContainer],
@@ -18,22 +24,20 @@ describe('Signup container component', (): void => {
 	})
 	class TestHostComponent {}
 
-	beforeEach(async (): Promise<void> => {
-		await TestBed.configureTestingModule({
-			imports: [TestHostComponent],
-		}).compileComponents();
-
-		const fixture = TestBed.createComponent(TestHostComponent);
-		nativeElement = fixture.nativeElement;
-
-		await fixture.whenStable();
-		fixture.detectChanges();
+	beforeEach((): IMockBuilderExtended => {
+		return MockBuilder(TestHostComponent);
 	});
 
 	it('should render projected content', (): void => {
-		const adaptiveContainer: Element | null = nativeElement.querySelector(
-			'[data-testid="adaptive-container"]',
+		const fixture: MockedComponentFixture<TestHostComponent, TestHostComponent> =
+			MockRender(TestHostComponent);
+
+		const adaptiveContainer: MockedDebugElement<AdaptiveContainer> = ngMocks.find(
+			fixture.point,
+			AdaptiveContainer,
 		);
+		const nativeElement: Element = adaptiveContainer.nativeElement;
+
 		const projectedContent: Element | null = nativeElement.querySelector(
 			'[data-testid="projected-content"]',
 		);

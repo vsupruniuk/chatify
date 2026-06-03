@@ -1,0 +1,23 @@
+@use "/styles/shared/mixins";
+
+.auth-header {
+  padding: 0.5rem 1rem;
+
+  @include mixins.tablet {
+    padding: 1rem 2rem;
+  }
+
+  @include mixins.desktop {
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+  }
+
+  &-wrapper {
+    display: flex;
+    justify-content: center;
+
+    @include mixins.tablet {
+      justify-content: start;
+    }
+  }
+}

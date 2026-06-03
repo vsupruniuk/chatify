@@ -17,4 +17,4 @@ export const routesConfig: Routes = [
 			return module.SignupPage;
 		},
 	},
-];
+] as const;
