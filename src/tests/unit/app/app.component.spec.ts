@@ -1,25 +1,25 @@
-import { TestBed } from '@angular/core/testing';
+import { RouterOutlet } from '@angular/router';
+
+import {
+	IMockBuilderExtended,
+	MockBuilder,
+	MockedComponentFixture,
+	MockRender,
+	ngMocks,
+} from 'ng-mocks';
 
 import { AppComponent } from '../../../app.component';
 
 describe('App component', (): void => {
-	let nativeElement: HTMLElement;
-
-	beforeEach(async (): Promise<void> => {
-		await TestBed.configureTestingModule({
-			imports: [AppComponent],
-		}).compileComponents();
-
-		const fixture = TestBed.createComponent(AppComponent);
-		nativeElement = fixture.nativeElement;
-
-		await fixture.whenStable();
-		fixture.detectChanges();
+	beforeEach((): IMockBuilderExtended => {
+		return MockBuilder(AppComponent).mock(RouterOutlet);
 	});
 
 	it('should render router outlet', (): void => {
-		const child: Element | null = nativeElement.querySelector('router-outlet');
+		const fixture: MockedComponentFixture<AppComponent, AppComponent> = MockRender(AppComponent);
 
-		expect(child).not.toBeNull();
+		const outlet = ngMocks.find(fixture.point, RouterOutlet);
+
+		expect(outlet).not.toBeNull();
 	});
 });

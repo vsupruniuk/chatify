@@ -1,1 +1,1 @@
-export * from './auth-header/authHeader.component';
+export * from '@containers/authHeader/authHeader.component';

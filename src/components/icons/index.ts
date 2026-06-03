@@ -1,1 +1,1 @@
-export * from './app-logo/iconAppLogo.component';
+export * from '@components/icons/appLogo/iconAppLogo.component';

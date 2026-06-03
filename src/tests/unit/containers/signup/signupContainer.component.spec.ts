@@ -1,38 +1,58 @@
-import { TestBed } from '@angular/core/testing';
+import {
+	IMockBuilderExtended,
+	MockBuilder,
+	MockedComponentFixture,
+	MockRender,
+	ngMocks,
+} from 'ng-mocks';
 
 import { SignupContainer } from '@containers/signup';
+import { AuthSwitch, SignupForm } from '@containers/signup/components';
+
+import { AdaptiveContainer } from '@components/layout';
 
 describe('Signup container component', (): void => {
-	let nativeElement: HTMLElement;
-
-	beforeEach(async (): Promise<void> => {
-		await TestBed.configureTestingModule({
-			imports: [SignupContainer],
-		}).compileComponents();
-
-		const fixture = TestBed.createComponent(SignupContainer);
-		nativeElement = fixture.nativeElement;
-
-		await fixture.whenStable();
-		fixture.detectChanges();
+	beforeEach((): IMockBuilderExtended => {
+		return MockBuilder(SignupContainer).mock(SignupForm).mock(AuthSwitch).mock(AdaptiveContainer);
 	});
 
 	it('should render top level element as tag section', (): void => {
-		const child: Element | null = nativeElement.querySelector('[data-testid="signup-container"]');
-		console.log(child?.outerHTML);
+		const fixture: MockedComponentFixture<SignupContainer, SignupContainer> =
+			MockRender(SignupContainer);
+
+		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
+		const child: Element | null = host.firstElementChild;
 
 		expect(child).not.toBeNull();
 		expect(child?.tagName).toBe('SECTION');
 	});
 
+	it('should render signup container header', (): void => {
+		const fixture: MockedComponentFixture<SignupContainer, SignupContainer> =
+			MockRender(SignupContainer);
+
+		const child: Element | null = fixture.point.nativeElement.querySelector(
+			'h1[data-testid="signup-container-title"]',
+		);
+
+		expect(child).not.toBeNull();
+		expect(child?.textContent).toBe('Signup');
+	});
+
 	it('should render signup form component', (): void => {
-		const child: Element | null = nativeElement.querySelector('ctf-signup-form');
+		const fixture: MockedComponentFixture<SignupContainer, SignupContainer> =
+			MockRender(SignupContainer);
+
+		const child = ngMocks.find(fixture.point, SignupForm);
 
 		expect(child).not.toBeNull();
 	});
 
 	it('should render auth switch component', (): void => {
-		const child: Element | null = nativeElement.querySelector('ctf-auth-switch');
+		const fixture: MockedComponentFixture<SignupContainer, SignupContainer> =
+			MockRender(SignupContainer);
+
+		const child = ngMocks.find(fixture.point, AuthSwitch);
 
 		expect(child).not.toBeNull();
 	});
