@@ -1,23 +1,20 @@
 @use "/styles/shared/mixins";
+@use "/styles/shared/variables";
 
 .auth-header {
-  padding: 0.5rem 1rem;
-
-  @include mixins.tablet {
-    padding: 1rem 2rem;
-  }
-
-  @include mixins.desktop {
-    padding-right: 2.5rem;
-    padding-left: 2.5rem;
-  }
+  margin-bottom: 24px;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid variables.$color-border;
+  background-color: variables.$color-white;
 
   &-wrapper {
     display: flex;
-    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    justify-content: start;
+  }
 
-    @include mixins.tablet {
-      justify-content: start;
-    }
+  &-title {
+    @include mixins.header-h2;
   }
 }

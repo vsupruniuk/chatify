@@ -1,0 +1,6 @@
+@use "styles/shared/variables";
+
+.signup-page {
+  height: 100dvh;
+  background-color: variables.$color-accent-light;
+}

@@ -1,35 +1,36 @@
 @use "/styles/shared/mixins";
+@use "/styles/shared/variables";
 
 .signup-container {
-  padding-right: 1rem;
-  padding-left: 1rem;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
 
-  @include mixins.tablet {
-    padding-right: 2rem;
-    padding-left: 2rem;
-  }
-
-  @include mixins.desktop {
-    padding-right: 2.5rem;
-    padding-left: 2.5rem;
+  &-header {
+    margin-bottom: 20px;
   }
 
   &-title {
     @include mixins.header-h1;
+  }
 
-    margin-bottom: 24px;
-    text-align: center;
+  &-description {
+    @include mixins.text-description;
   }
 
   &-wrapper {
-    width: 100%;
-    max-width: 45rem;
-    margin: 0 auto;
+    padding: 16px 24px;
+
+    @include mixins.tablet {
+      padding: 32px;
+      border-radius: 1rem;
+      background-color: variables.$color-white;
+    }
   }
 
   &-auth {
-    @include mixins.tablet {
-      padding: 1.5rem;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 }

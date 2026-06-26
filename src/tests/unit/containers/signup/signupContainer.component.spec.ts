@@ -27,7 +27,7 @@ describe('Signup container component', (): void => {
 		expect(child?.tagName).toBe('SECTION');
 	});
 
-	it('should render signup container header', (): void => {
+	it('should render signup container title', (): void => {
 		const fixture: MockedComponentFixture<SignupContainer, SignupContainer> =
 			MockRender(SignupContainer);
 
@@ -36,7 +36,7 @@ describe('Signup container component', (): void => {
 		);
 
 		expect(child).not.toBeNull();
-		expect(child?.textContent).toBe('Signup');
+		expect(child?.textContent.trim()).toBe('Create your account');
 	});
 
 	it('should render signup form component', (): void => {

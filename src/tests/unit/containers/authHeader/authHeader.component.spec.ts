@@ -31,7 +31,18 @@ describe('Auth Header component', (): void => {
 		const iconAppLogoComponent: IconAppLogo = ngMocks.get(ngMocks.find(IconAppLogo), IconAppLogo);
 
 		expect(iconAppLogoComponent).not.toBeNull();
-		expect(iconAppLogoComponent.height).toBe(40);
-		expect(iconAppLogoComponent.width).toBe(40);
+		expect(iconAppLogoComponent.height).toBe(32);
+		expect(iconAppLogoComponent.width).toBe(32);
+	});
+
+	it('should render auth header title', (): void => {
+		const fixture: MockedComponentFixture<AuthHeader, AuthHeader> = MockRender(AuthHeader);
+
+		const child: Element | null = fixture.point.nativeElement.querySelector(
+			'h2[data-testid="auth-header-title"]',
+		);
+
+		expect(child).not.toBeNull();
+		expect(child?.textContent).toBe('Chatify');
 	});
 });
