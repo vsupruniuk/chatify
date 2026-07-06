@@ -17,4 +17,13 @@ export const routesConfig: Routes = [
 			return module.SignupPage;
 		},
 	},
+	{
+		path: Route.LOGIN,
+		title: PageTitle.LOGIN,
+		loadComponent: async () => {
+			const module = await import('@pages/login/loginPage.component');
+
+			return module.LoginPage;
+		},
+	},
 ] as const;
