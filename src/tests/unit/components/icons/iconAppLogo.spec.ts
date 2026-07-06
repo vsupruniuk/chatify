@@ -40,7 +40,7 @@ describe('Icon app logo component', (): void => {
 	});
 
 	it('should use height value from provided input', (): void => {
-		const height = 28;
+		const height: number = 28;
 
 		const fixture = MockRender(IconAppLogo, { height });
 
@@ -52,7 +52,7 @@ describe('Icon app logo component', (): void => {
 	});
 
 	it('should use width value from provided input', (): void => {
-		const width = 28;
+		const width: number = 28;
 
 		const fixture = MockRender(IconAppLogo, { width });
 

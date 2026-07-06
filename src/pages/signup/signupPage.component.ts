@@ -7,7 +7,7 @@ import { SignupContainer } from '@containers/signup';
 	selector: 'ctf-signup-page',
 	imports: [SignupContainer, AuthHeader],
 	templateUrl: './signupPage.component.html',
-	styleUrl: 'signupPage.component.scss',
+	styleUrl: './signupPage.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupPage {}
