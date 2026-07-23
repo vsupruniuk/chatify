@@ -1,0 +1,14 @@
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &-block {
+    display: flex;
+    gap: 12px;
+
+    > ctf-text-input {
+      flex: 1 1 0;
+    }
+  }
+}
