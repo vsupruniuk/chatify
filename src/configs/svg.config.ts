@@ -6,8 +6,8 @@ export const svgConfig = {
 		defaultHeigh: 48,
 	},
 	user: {
-		defaultWidth: 24,
-		defaultHeigh: 24,
+		defaultWidth: 48,
+		defaultHeigh: 48,
 		defaultColor: Color.TEXT_FAINT,
 	},
 	checkMark: {

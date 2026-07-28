@@ -1,5 +1,5 @@
 export declare namespace InputsTypes {
-	type TTextInputType = 'text';
+	type TTextInputType = 'text' | 'password';
 
 	type TAutocomplete = 'off' | 'given-name';
 }

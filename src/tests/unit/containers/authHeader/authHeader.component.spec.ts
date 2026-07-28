@@ -25,7 +25,7 @@ describe('Auth Header component', (): void => {
 		expect(child?.tagName).toBe('HEADER');
 	});
 
-	it('should render app logo component with provided inputs', (): void => {
+	it('should render icon app logo component with provided inputs', (): void => {
 		MockRender(AuthHeader);
 
 		const iconAppLogoComponent: IconAppLogo = ngMocks.get(ngMocks.find(IconAppLogo), IconAppLogo);

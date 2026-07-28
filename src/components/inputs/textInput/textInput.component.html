@@ -3,7 +3,11 @@
 		<label class="text-input-label" [for]="inputId()" [class.is-disabled]="isDisabled()">
 			{{ label() }}
 
-			<span [class.is-optional]="!isRequired()" [class.is-required]="isRequired()">
+			<span
+				data-testid="text-input-requirement-label"
+				[class.is-optional]="!isRequired()"
+				[class.is-required]="isRequired()"
+			>
 				{{ requirementLabel() }}
 			</span>
 		</label>
@@ -40,7 +44,12 @@
 
 		@if (rightIcon()) {
 			@if (isRightIconClickable()) {
-				<button type="button" class="text-input-right-icon" (click)="rightIconClicked.emit($event)">
+				<button
+					type="button"
+					class="text-input-right-icon"
+					data-testid="text-input-right-icon"
+					(click)="rightIconClicked.emit($event)"
+				>
 					<ng-container *ngComponentOutlet="rightIcon(); inputs: rightIconInputs" />
 				</button>
 			} @else {
@@ -55,7 +64,9 @@
 		<div class="text-input-error">
 			<ctf-icon-exclamation-mark [width]="13" [height]="13" />
 
-			<span class="text-input-error-message">{{ errorMessage() }}</span>
+			<span class="text-input-error-message" data-testid="text-input-error-message">
+				{{ errorMessage() }}
+			</span>
 		</div>
 	}
 </div>

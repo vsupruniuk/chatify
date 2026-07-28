@@ -50,11 +50,11 @@ export class TextInput {
 	public readonly rightIconName: InputSignal<IconsTypes.TIconName | null> =
 		input<IconsTypes.TIconName | null>(null);
 
-	protected readonly valueChanged: OutputEmitterRef<Event> = output<Event>();
-	protected readonly rightIconClicked: OutputEmitterRef<PointerEvent> = output<PointerEvent>();
-	protected readonly blurred: OutputEmitterRef<FocusEvent> = output<FocusEvent>();
-	protected readonly keyDown: OutputEmitterRef<KeyboardEvent> = output<KeyboardEvent>();
-	protected readonly pasted: OutputEmitterRef<ClipboardEvent> = output<ClipboardEvent>();
+	public readonly valueChanged: OutputEmitterRef<Event> = output<Event>();
+	public readonly rightIconClicked: OutputEmitterRef<PointerEvent> = output<PointerEvent>();
+	public readonly blurred: OutputEmitterRef<FocusEvent> = output<FocusEvent>();
+	public readonly keyDown: OutputEmitterRef<KeyboardEvent> = output<KeyboardEvent>();
+	public readonly pasted: OutputEmitterRef<ClipboardEvent> = output<ClipboardEvent>();
 
 	protected readonly requirementLabel: Signal<string> = computed<string>(() =>
 		this.isRequired() ? '*' : '(Optional)',
@@ -96,8 +96,8 @@ export class TextInput {
 		Record<string, unknown>
 	>(() => {
 		const inputs = {
-			width: 15,
-			height: 15,
+			width: 14,
+			height: 14,
 			color: Color.TEXT_FAINT,
 		};
 
