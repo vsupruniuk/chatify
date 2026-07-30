@@ -18,4 +18,29 @@ export const svgConfig = {
 		defaultWidth: 48,
 		defaultHeigh: 48,
 	},
+	atSign: {
+		defaultWidth: 48,
+		defaultHeigh: 48,
+		defaultColor: Color.TEXT_FAINT,
+	},
+	mail: {
+		defaultWidth: 48,
+		defaultHeigh: 48,
+		defaultColor: Color.TEXT_FAINT,
+	},
+	lock: {
+		defaultWidth: 48,
+		defaultHeigh: 48,
+		defaultColor: Color.TEXT_FAINT,
+	},
+	eye: {
+		defaultWidth: 48,
+		defaultHeigh: 48,
+		defaultColor: Color.TEXT_FAINT,
+	},
+	eyeCrossed: {
+		defaultWidth: 48,
+		defaultHeigh: 48,
+		defaultColor: Color.TEXT_FAINT,
+	},
 } as const;

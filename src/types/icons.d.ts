@@ -1,3 +1,3 @@
 export declare namespace IconsTypes {
-	type TIconName = 'user' | 'checkMark';
+	type TIconName = 'atSign' | 'checkMark' | 'eye' | 'eyeCrossed' | 'lock' | 'mail' | 'user';
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
 	selector: 'ctf-signup-form',
@@ -7,14 +7,4 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 	styleUrl: './signupForm.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SignupForm {
-	readonly firstName = signal('');
-
-	changeFirstName(event: Event) {
-		this.firstName.set((event.target as HTMLInputElement).value);
-	}
-
-	test(event: Event) {
-		console.log(event);
-	}
-}
+export class SignupForm {}

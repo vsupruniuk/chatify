@@ -2,3 +2,8 @@ export * from '@components/icons/appLogo/iconAppLogo.component';
 export * from '@components/icons/user/iconUser.component';
 export * from '@components/icons/checkMark/iconCheckMark.component';
 export * from '@components/icons/exclamationMark/iconExclamationMark.component';
+export * from '@components/icons/atSign/iconAtSign.component';
+export * from '@components/icons/mail/iconMail.component';
+export * from '@components/icons/lock/iconLock.component';
+export * from '@components/icons/eye/iconEye.component';
+export * from '@components/icons/eyeCrossed/iconEyeCrossed.component';
