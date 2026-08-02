@@ -11,7 +11,8 @@
 
   background: variables.$color-white;
 
-  transition: border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+  transition: border-color variables.$transition-duration-default variables.$transition-function-default,
+    background-color variables.$transition-duration-default variables.$transition-function-default;
 
   @include typography-mixins.text-input;
 

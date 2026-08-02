@@ -64,3 +64,11 @@
   color: variables.$color-error;
   letter-spacing: 0;
 }
+
+@mixin text-primary-button {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: variables.$color-white;
+  letter-spacing: 0;
+}

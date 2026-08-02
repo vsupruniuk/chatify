@@ -4,8 +4,6 @@ import { IconEyeCrossed } from '@components/icons';
 
 import { svgConfig } from '@configs';
 
-import { Color } from '@enums';
-
 describe('Icon eye crossed component', (): void => {
 	beforeEach((): IMockBuilderExtended => {
 		return MockBuilder(IconEyeCrossed);
