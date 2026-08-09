@@ -23,7 +23,7 @@ import { AuthTypes, IconsTypes, InputsTypes } from '@customTypes';
 
 import { errorMessagesConfig, passwordConfig } from '@configs';
 
-import { CustomValidators, TypeGuardHelper } from '@helpers';
+import { CustomValidator, TypeGuardHelper } from '@helpers';
 
 @Component({
 	selector: 'ctf-signup-form',
@@ -55,7 +55,7 @@ export class SignupForm implements OnInit {
 		password: ['', [Validators.required, Validators.pattern(passwordConfig.validationRegExp)]],
 		passwordConfirmation: [
 			'',
-			[Validators.required, CustomValidators.shouldMatchToField('password')],
+			[Validators.required, CustomValidator.shouldMatchToField('password')],
 		],
 	});
 
