@@ -10,6 +10,7 @@ import {
 	Type,
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { inputIconsConfig } from '@configs';
 
@@ -21,7 +22,7 @@ import { IconsTypes, InputsTypes } from '@customTypes';
 
 @Component({
 	selector: 'ctf-text-input',
-	imports: [NgComponentOutlet, IconExclamationMark],
+	imports: [NgComponentOutlet, IconExclamationMark, ReactiveFormsModule],
 	templateUrl: './textInput.component.html',
 	styleUrl: './textInput.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,10 +31,12 @@ export class TextInput {
 	public readonly inputId: InputSignal<string> = input.required<string>();
 	public readonly name: InputSignal<string> = input.required<string>();
 	public readonly placeholder: InputSignal<string> = input.required<string>();
-	public readonly value: InputSignal<string> = input.required<string>();
+	public readonly formControlInstance: InputSignal<FormControl<string>> =
+		input.required<FormControl<string>>();
 
 	public readonly label: InputSignal<string> = input<string>('');
 	public readonly errorMessage: InputSignal<string> = input<string>('');
+	public readonly maxlength: InputSignal<number | null> = input<number | null>(null);
 	public readonly type: InputSignal<InputsTypes.TTextInputType> =
 		input<InputsTypes.TTextInputType>('text');
 	public readonly autocomplete: InputSignal<InputsTypes.TAutocomplete> =
@@ -50,11 +53,8 @@ export class TextInput {
 	public readonly rightIconName: InputSignal<IconsTypes.TIconName | null> =
 		input<IconsTypes.TIconName | null>(null);
 
-	public readonly valueChanged: OutputEmitterRef<Event> = output<Event>();
 	public readonly rightIconClicked: OutputEmitterRef<PointerEvent> = output<PointerEvent>();
 	public readonly blurred: OutputEmitterRef<FocusEvent> = output<FocusEvent>();
-	public readonly keyDown: OutputEmitterRef<KeyboardEvent> = output<KeyboardEvent>();
-	public readonly pasted: OutputEmitterRef<ClipboardEvent> = output<ClipboardEvent>();
 
 	protected readonly requirementLabel: Signal<string> = computed<string>(() =>
 		this.isRequired() ? '*' : '(Optional)',
@@ -132,8 +132,6 @@ export class TextInput {
 	protected onPaste(event: ClipboardEvent): void {
 		if (this.disableCopyAndPaste()) {
 			event.preventDefault();
-		} else {
-			this.pasted.emit(event);
 		}
 	}
 }

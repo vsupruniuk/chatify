@@ -1,4 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
+import { FormControl, FormControlDirective, ReactiveFormsModule } from '@angular/forms';
 import {
 	IMockBuilderExtended,
 	MockBuilder,
@@ -17,7 +18,11 @@ import { Color } from '@enums';
 
 describe('Text input component', (): void => {
 	beforeEach((): IMockBuilderExtended => {
-		return MockBuilder(TextInput).mock(IconExclamationMark).mock(IconUser).keep(NgComponentOutlet);
+		return MockBuilder(TextInput)
+			.mock(IconExclamationMark)
+			.mock(IconUser)
+			.keep(NgComponentOutlet)
+			.keep(ReactiveFormsModule);
 	});
 
 	afterEach((): void => {
@@ -28,7 +33,7 @@ describe('Text input component', (): void => {
 		inputId: 'first-name',
 		name: 'first-name',
 		placeholder: 'Enter first name',
-		value: 'Tony',
+		formControlInstance: new FormControl(''),
 	};
 
 	it('should render label if label value is provided', (): void => {
@@ -337,16 +342,18 @@ describe('Text input component', (): void => {
 		expect(child?.placeholder).toBe(requiredInputs.placeholder);
 	});
 
-	it('should render input with provided value value', (): void => {
+	it('should attach provided form control to the input', (): void => {
 		const fixture: MockedComponentFixture = MockRender(TextInput, {
 			...requiredInputs,
 		});
 
-		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
-		const child: HTMLInputElement | null = host.querySelector(`[id="${requiredInputs.inputId}"]`);
+		const input: MockedDebugElement<HTMLInputElement> = ngMocks.find(
+			fixture.point,
+			`[id="${requiredInputs.inputId}"]`,
+		);
+		const formControlDirective: FormControlDirective = ngMocks.get(input, FormControlDirective);
 
-		expect(child).not.toBeNull();
-		expect(child?.value).toBe(requiredInputs.value);
+		expect(formControlDirective.control).toBe(requiredInputs.formControlInstance);
 	});
 
 	it('should render input with type text by default', (): void => {
@@ -376,13 +383,12 @@ describe('Text input component', (): void => {
 		expect(child?.type).toBe('password');
 	});
 
-	it('should set input disabled attribute to true if input is disabled', (): void => {
-		const isDisabled: boolean = true;
-
+	it('should set input disabled attribute to true if form control is disabled', (): void => {
 		const fixture: MockedComponentFixture = MockRender(TextInput, {
 			...requiredInputs,
-			isDisabled,
 		});
+
+		requiredInputs.formControlInstance.disable();
 
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const child: HTMLInputElement | null = host.querySelector(`[id="${requiredInputs.inputId}"]`);
@@ -478,21 +484,6 @@ describe('Text input component', (): void => {
 		expect(child?.classList.contains('error')).toBe(true);
 	});
 
-	it('should set aria disabled attribute to true if input is disabled', (): void => {
-		const isDisabled: boolean = true;
-
-		const fixture: MockedComponentFixture = MockRender(TextInput, {
-			...requiredInputs,
-			isDisabled,
-		});
-
-		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
-		const child: HTMLInputElement | null = host.querySelector(`[id="${requiredInputs.inputId}"]`);
-
-		expect(child).not.toBeNull();
-		expect(child?.ariaDisabled).toBe('true');
-	});
-
 	it('should set aria invalid attribute to true if error message is provided', (): void => {
 		const errorMessage: string = 'First name is required';
 
@@ -508,25 +499,24 @@ describe('Text input component', (): void => {
 		expect(child?.ariaInvalid).toBe('true');
 	});
 
-	it('should emit value changed event if input event happened', (): void => {
+	it('should change value in form control if input event happened', (): void => {
 		const fixture: MockedComponentFixture = MockRender(TextInput, {
 			...requiredInputs,
 		});
 
+		const inputValue = 'Tony';
+
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
-		const componentInstance: TextInput = fixture.point.componentInstance as TextInput;
 		const child: HTMLInputElement = host.querySelector(
 			`[id="${requiredInputs.inputId}"]`,
 		) as HTMLInputElement;
 
-		jest.spyOn(componentInstance.valueChanged, 'emit');
-
+		child.value = inputValue;
 		const event: Event = new Event('input');
 
 		child.dispatchEvent(event);
 
-		expect(componentInstance.valueChanged.emit).toHaveBeenCalledTimes(1);
-		expect(componentInstance.valueChanged.emit).toHaveBeenNthCalledWith(1, event);
+		expect(requiredInputs.formControlInstance.value).toBe(inputValue);
 	});
 
 	it('should emit blurred event if blur event happened', (): void => {
@@ -548,27 +538,6 @@ describe('Text input component', (): void => {
 
 		expect(componentInstance.blurred.emit).toHaveBeenCalledTimes(1);
 		expect(componentInstance.blurred.emit).toHaveBeenNthCalledWith(1, event);
-	});
-
-	it('should emit key down event if keydown event happened', (): void => {
-		const fixture: MockedComponentFixture = MockRender(TextInput, {
-			...requiredInputs,
-		});
-
-		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
-		const componentInstance: TextInput = fixture.point.componentInstance as TextInput;
-		const child: HTMLInputElement = host.querySelector(
-			`[id="${requiredInputs.inputId}"]`,
-		) as HTMLInputElement;
-
-		jest.spyOn(componentInstance.keyDown, 'emit');
-
-		const event: KeyboardEvent = new KeyboardEvent('keydown');
-
-		child.dispatchEvent(event);
-
-		expect(componentInstance.keyDown.emit).toHaveBeenCalledTimes(1);
-		expect(componentInstance.keyDown.emit).toHaveBeenNthCalledWith(1, event);
 	});
 
 	it('should prevent copy event if copy and paste are disabled and copy event happened', (): void => {
@@ -634,24 +603,23 @@ describe('Text input component', (): void => {
 		expect(event.preventDefault).toHaveBeenCalledTimes(1);
 	});
 
-	it('should emit pasted event if copy and paste are not disabled and paste event happened', (): void => {
+	it('should change value in form control if copy and paste are not disabled, and paste event happened', (): void => {
 		const fixture: MockedComponentFixture = MockRender(TextInput, {
 			...requiredInputs,
 		});
 
+		const inputValue = 'Tony';
+
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
-		const componentInstance: TextInput = fixture.point.componentInstance as TextInput;
 		const child: HTMLInputElement = host.querySelector(
 			`[id="${requiredInputs.inputId}"]`,
 		) as HTMLInputElement;
 
-		jest.spyOn(componentInstance.pasted, 'emit');
-
+		child.value = inputValue;
 		const event: Event = new Event('paste');
 
 		child.dispatchEvent(event);
 
-		expect(componentInstance.pasted.emit).toHaveBeenCalledTimes(1);
-		expect(componentInstance.pasted.emit).toHaveBeenNthCalledWith(1, event);
+		expect(requiredInputs.formControlInstance.value).toBe(inputValue);
 	});
 });

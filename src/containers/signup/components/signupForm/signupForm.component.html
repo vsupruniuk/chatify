@@ -1,3 +1,119 @@
-<form class="signup-form">
-	<div class="signup-form-block"></div>
+<form class="signup-form" [formGroup]="signupForm" (submit)="signup($event)">
+	<div class="signup-form-block">
+		<ctf-text-input
+			inputId="signup-form-first-name"
+			name="firstName"
+			placeholder="Tony"
+			label="First Name"
+			leftIconName="user"
+			autocomplete="given-name"
+			[maxlength]="255"
+			[formControlInstance]="signupForm.controls.firstName"
+			[errorMessage]="getFieldError('firstName')"
+			[rightIconName]="getRightIconName('firstName')"
+			[isValid]="signupForm.controls.firstName.valid"
+			[isDisabled]="signupForm.controls.firstName.disabled"
+			[isRequired]="true"
+			(blurred)="validateField('firstName')"
+		/>
+
+		<ctf-text-input
+			inputId="signup-form-last-name"
+			name="lastName"
+			placeholder="Stark"
+			label="Last Name"
+			leftIconName="user"
+			autocomplete="family-name"
+			[maxlength]="255"
+			[formControlInstance]="signupForm.controls.lastName"
+			[errorMessage]="getFieldError('lastName')"
+			[rightIconName]="getRightIconName('lastName')"
+			[isValid]="signupForm.controls.lastName.valid && signupForm.controls.lastName.dirty"
+			[isDisabled]="signupForm.controls.lastName.disabled"
+			(blurred)="validateField('lastName')"
+		/>
+	</div>
+
+	<ctf-text-input
+		inputId="signup-form-nickname"
+		name="nickname"
+		placeholder="t.stark"
+		label="Nickname"
+		leftIconName="atSign"
+		autocomplete="username"
+		[maxlength]="255"
+		[formControlInstance]="signupForm.controls.nickname"
+		[errorMessage]="getFieldError('nickname')"
+		[rightIconName]="getRightIconName('nickname')"
+		[isValid]="signupForm.controls.nickname.valid"
+		[isDisabled]="signupForm.controls.nickname.disabled"
+		[isRequired]="true"
+		(blurred)="validateField('nickname')"
+	/>
+
+	<ctf-text-input
+		inputId="signup-form-email"
+		name="email"
+		placeholder="t.stark@avengers.com"
+		label="Email"
+		leftIconName="mail"
+		autocomplete="email"
+		type="email"
+		[maxlength]="255"
+		[formControlInstance]="signupForm.controls.email"
+		[errorMessage]="getFieldError('email')"
+		[rightIconName]="getRightIconName('email')"
+		[isValid]="signupForm.controls.email.valid"
+		[isDisabled]="signupForm.controls.email.disabled"
+		[isRequired]="true"
+		(blurred)="validateField('email')"
+	/>
+
+	<ctf-text-input
+		inputId="signup-form-password"
+		name="password"
+		placeholder="At least 6 characters"
+		label="Password"
+		leftIconName="lock"
+		[rightIconName]="getPasswordRightIconName('password')"
+		[type]="passwordInputType()"
+		[maxlength]="255"
+		[formControlInstance]="signupForm.controls.password"
+		[errorMessage]="getFieldError('password')"
+		[isValid]="signupForm.controls.password.valid"
+		[isDisabled]="signupForm.controls.password.disabled"
+		[isRightIconClickable]="true"
+		[disableCopyAndPaste]="true"
+		[isRequired]="true"
+		(blurred)="validateField('password')"
+		(rightIconClicked)="changePasswordInputType('password')"
+	/>
+
+	<ctf-text-input
+		inputId="signup-form-password-confirmation"
+		name="passwordConfirmation"
+		placeholder="Repeat your password"
+		label="Confirm password"
+		leftIconName="lock"
+		[rightIconName]="getPasswordRightIconName('passwordConfirmation')"
+		[type]="passwordConfirmationInputType()"
+		[formControlInstance]="signupForm.controls.passwordConfirmation"
+		[errorMessage]="getFieldError('passwordConfirmation')"
+		[isValid]="signupForm.controls.passwordConfirmation.valid"
+		[isDisabled]="signupForm.controls.passwordConfirmation.disabled"
+		[isRightIconClickable]="true"
+		[disableCopyAndPaste]="true"
+		[isRequired]="true"
+		(blurred)="validateField('passwordConfirmation')"
+		(rightIconClicked)="changePasswordInputType('passwordConfirmation')"
+	/>
+
+	<div class="signup-form-button">
+		<ctf-primary-button
+			type="submit"
+			[text]="getButtonText()"
+			[isDisabled]="getIsSubmitDisabled()"
+			[isLoading]="isRequestLoading()"
+		/>
+	</div>
 </form>

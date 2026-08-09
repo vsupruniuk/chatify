@@ -54,7 +54,9 @@
     }
   }
 
-  input[type="text"] {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
     @include mixins.input-default-styles;
 
     &.with-left-icon {
