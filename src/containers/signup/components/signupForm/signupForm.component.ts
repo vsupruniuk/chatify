@@ -52,7 +52,14 @@ export class SignupForm implements OnInit {
 		lastName: ['', [Validators.minLength(3)]],
 		nickname: ['', [Validators.required, Validators.minLength(3)]],
 		email: ['', [Validators.required, Validators.email]],
-		password: ['', [Validators.required, Validators.pattern(passwordConfig.validationRegExp)]],
+		password: [
+			'',
+			[
+				Validators.required,
+				Validators.minLength(6),
+				Validators.pattern(passwordConfig.validationRegExp),
+			],
+		],
 		passwordConfirmation: [
 			'',
 			[Validators.required, CustomValidator.shouldMatchToField('password')],
@@ -124,11 +131,11 @@ export class SignupForm implements OnInit {
 	protected changePasswordInputType(fieldName: AuthTypes.TAuthPasswordRequestField): void {
 		if (fieldName === 'password') {
 			this.passwordInputType.update((currentValue: InputsTypes.TTextInputType) =>
-				currentValue === 'password' ? 'email' : 'password',
+				currentValue === 'password' ? 'text' : 'password',
 			);
 		} else {
 			this.passwordConfirmationInputType.update((currentValue: InputsTypes.TTextInputType) =>
-				currentValue === 'password' ? 'email' : 'password',
+				currentValue === 'password' ? 'text' : 'password',
 			);
 		}
 	}
@@ -148,9 +155,7 @@ export class SignupForm implements OnInit {
 		}
 	}
 
-	protected signup(event: SubmitEvent): void {
-		event.preventDefault();
-
+	protected signup(): void {
 		this.isRequestLoading.set(true);
 		this.signupForm.disable();
 	}

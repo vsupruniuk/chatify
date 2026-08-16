@@ -21,7 +21,7 @@
 		"lint:ci": "ng lint && npx stylelint \"src/**/*.scss\"",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"type-check": "tsc",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"convert-coverage": "ts-node scripts/convertHtmlCoverageToSonar.ts"
 	},
 	"dependencies": {
@@ -49,7 +49,7 @@
 		"husky": "9.1.7",
 		"jest": "30.3.0",
 		"jest-environment-jsdom": "30.3.0",
-		"jest-preset-angular": "16.1.1",
+		"jest-preset-angular": "17.0.0",
 		"jiti": "2.6.1",
 		"ng-mocks": "14.15.2",
 		"prettier": "3.8.1",

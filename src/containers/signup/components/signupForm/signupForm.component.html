@@ -1,4 +1,4 @@
-<form class="signup-form" [formGroup]="signupForm" (submit)="signup($event)">
+<form class="signup-form" data-testid="signup-form" [formGroup]="signupForm" (submit)="signup()">
 	<div class="signup-form-block">
 		<ctf-text-input
 			inputId="signup-form-first-name"
@@ -97,6 +97,7 @@
 		leftIconName="lock"
 		[rightIconName]="getPasswordRightIconName('passwordConfirmation')"
 		[type]="passwordConfirmationInputType()"
+		[maxlength]="255"
 		[formControlInstance]="signupForm.controls.passwordConfirmation"
 		[errorMessage]="getFieldError('passwordConfirmation')"
 		[isValid]="signupForm.controls.passwordConfirmation.valid"
