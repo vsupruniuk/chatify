@@ -1,5 +1,5 @@
-@use "/styles/shared/mixins";
-@use "/styles/shared/variables";
+@use "styles/shared/mixins";
+@use "styles/shared/variables";
 
 .signup-container {
   width: 100%;
@@ -19,7 +19,7 @@
   }
 
   &-wrapper {
-    padding: 16px 24px;
+    padding: 24px 16px;
 
     @include mixins.tablet {
       padding: 32px;

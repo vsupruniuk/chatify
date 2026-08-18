@@ -1,0 +1,69 @@
+<div class="text-input">
+	@if (label()) {
+		<label class="text-input-label" [for]="inputId()" [class.is-disabled]="isDisabled()">
+			{{ label() }}
+
+			<span
+				data-testid="text-input-requirement-label"
+				[class.is-optional]="!isRequired()"
+				[class.is-required]="isRequired()"
+			>
+				{{ requirementLabel() }}
+			</span>
+		</label>
+	}
+
+	<div class="text-input-wrapper">
+		@if (leftIcon()) {
+			<div class="text-input-left-icon">
+				<ng-container *ngComponentOutlet="leftIcon(); inputs: leftIconInputs()" />
+			</div>
+		}
+
+		<input
+			[id]="inputId()"
+			[name]="name()"
+			[formControl]="formControlInstance()"
+			[placeholder]="placeholder()"
+			[type]="type()"
+			[autocomplete]="autocomplete()"
+			[maxlength]="maxlength()"
+			[class.with-left-icon]="hasLeftIcon()"
+			[class.with-right-icon]="hasRightIcon()"
+			[class.valid]="isValid()"
+			[class.error]="hasError()"
+			[aria-invalid]="hasError()"
+			(blur)="blurred.emit($event)"
+			(copy)="preventCopyAndPaste($event)"
+			(cut)="preventCopyAndPaste($event)"
+			(paste)="preventCopyAndPaste($event)"
+		/>
+
+		@if (rightIcon()) {
+			@if (isRightIconClickable()) {
+				<button
+					type="button"
+					class="text-input-right-icon"
+					data-testid="text-input-right-icon"
+					(click)="rightIconClicked.emit($event)"
+				>
+					<ng-container *ngComponentOutlet="rightIcon(); inputs: rightIconInputs" />
+				</button>
+			} @else {
+				<div class="text-input-right-icon">
+					<ng-container *ngComponentOutlet="rightIcon(); inputs: rightIconInputs" />
+				</div>
+			}
+		}
+	</div>
+
+	@if (hasError()) {
+		<div class="text-input-error">
+			<ctf-icon-exclamation-mark [width]="13" [height]="13" />
+
+			<span class="text-input-error-message" data-testid="text-input-error-message">
+				{{ errorMessage() }}
+			</span>
+		</div>
+	}
+</div>

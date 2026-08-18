@@ -18,5 +18,22 @@ $color-surface: #F9FAFB;
 $color-white: #FFFFFF;
 
 $color-error: #EF4444;
+$color-error-light: #F87171;
 $color-error-bg: #FFF5F5;
+
+// Inputs
+$text-input-height: 44px;
+$text-input-padding: 0 14px;
+$text-input-padding-with-icon: 40px;
+$text-input-border-width: 2px;
+$text-input-border-radius: 12px;
+
+// Buttons
+$primary-button-heigh: 44px;
+$primary-button-padding: 0 20px;
+$primary-button-border-radius: 12px;
+
+// Transitions
+$transition-duration-default: 0.25s;
+$transition-function-default: ease-in-out;
 

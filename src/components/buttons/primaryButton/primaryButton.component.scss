@@ -1,0 +1,56 @@
+@use "/styles/shared/variables";
+@use "/styles/shared/mixins";
+@use "/styles/shared/functions";
+
+.primary-button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: variables.$primary-button-heigh;
+  padding: variables.$primary-button-padding;
+  border: none;
+  border-radius: variables.$primary-button-border-radius;
+
+  background-color: variables.$color-accent;
+  box-shadow: 0 4px 14px functions.hex-with-opacity(variables.$color-accent, 0.3);
+
+  transition: background-color variables.$transition-duration-default variables.$transition-function-default,
+    box-shadow variables.$transition-duration-default variables.$transition-function-default;
+
+  @include mixins.text-primary-button;
+
+  &:hover {
+    background-color: variables.$color-accent-hover;
+    box-shadow: 0 4px 14px functions.hex-with-opacity(variables.$color-accent, 0.35);
+  }
+
+  &:active {
+    background-color: variables.$color-accent-active;
+    box-shadow: 0 2px 8px functions.hex-with-opacity(variables.$color-accent, 0.25);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 functions.hex-with-opacity(variables.$color-accent, 0.3),
+      0 4px 14px functions.hex-with-opacity(variables.$color-accent, 0.25);
+  }
+
+  &:disabled {
+    cursor: default;
+    background-color: functions.hex-with-opacity(variables.$color-accent, 0.38);
+    box-shadow: none;
+  }
+
+  &.loading {
+    &::before {
+      content: "";
+
+      @include mixins.circle-loader(16, 16, 2);
+    }
+  }
+}
+
+
+

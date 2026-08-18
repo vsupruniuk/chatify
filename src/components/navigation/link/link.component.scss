@@ -1,7 +1,7 @@
-@use "/styles/shared/mixins";
+@use "styles/shared/mixins";
 
 .link-component {
-  @include mixins.link;
+  @include mixins.text-link;
 
   font-weight: 700;
 
