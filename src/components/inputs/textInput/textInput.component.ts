@@ -117,19 +117,7 @@ export class TextInput {
 		height: 14,
 	};
 
-	protected onCopy(event: ClipboardEvent): void {
-		if (this.disableCopyAndPaste()) {
-			event.preventDefault();
-		}
-	}
-
-	protected onCut(event: ClipboardEvent): void {
-		if (this.disableCopyAndPaste()) {
-			event.preventDefault();
-		}
-	}
-
-	protected onPaste(event: ClipboardEvent): void {
+	protected preventCopyAndPaste(event: ClipboardEvent): void {
 		if (this.disableCopyAndPaste()) {
 			event.preventDefault();
 		}

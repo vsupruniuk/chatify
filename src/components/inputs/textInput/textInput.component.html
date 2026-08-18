@@ -34,9 +34,9 @@
 			[class.error]="hasError()"
 			[aria-invalid]="hasError()"
 			(blur)="blurred.emit($event)"
-			(copy)="onCopy($event)"
-			(cut)="onCut($event)"
-			(paste)="onPaste($event)"
+			(copy)="preventCopyAndPaste($event)"
+			(cut)="preventCopyAndPaste($event)"
+			(paste)="preventCopyAndPaste($event)"
 		/>
 
 		@if (rightIcon()) {
