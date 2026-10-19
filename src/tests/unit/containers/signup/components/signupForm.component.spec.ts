@@ -36,6 +36,39 @@ describe('Signup form component', (): void => {
 		jest.clearAllMocks();
 	});
 
+	const signupData: AuthTypes.IAuthRequest = {
+		firstName: 'Tony',
+		lastName: 'Stark',
+		nickname: 't.stark',
+		email: 't.stark@avengers.com',
+		password: 'Qwerty12345!',
+		passwordConfirmation: 'Qwerty12345!',
+	};
+
+	const apiFieldSpecificErrors: HttpErrorResponse = new HttpErrorResponse({
+		status: HttpStatusCode.BadRequest,
+		error: {
+			status: ApiResponseStatus.ERROR,
+			message: 'Client error',
+			errors: [
+				{ field: 'email', message: 'Invalid email format' },
+				{ field: 'nickname', message: 'Invalid nickname format' },
+			],
+		},
+	});
+
+	const apiGeneralError: HttpErrorResponse = new HttpErrorResponse({
+		status: HttpStatusCode.BadRequest,
+		error: {
+			status: ApiResponseStatus.ERROR,
+			message: 'Client error',
+			errors: [
+				{ field: null, message: 'Something went wrong' },
+				{ field: null, message: 'Please, try again' },
+			],
+		},
+	});
+
 	it('should render first name input with provided default inputs', (): void => {
 		MockRender(SignupForm);
 
@@ -1217,14 +1250,7 @@ describe('Signup form component', (): void => {
 		);
 		const signupFormGroup: FormGroup = formGroupDirective.control;
 
-		signupFormGroup.setValue({
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		});
+		signupFormGroup.setValue(signupData);
 
 		fixture.detectChanges();
 
@@ -1292,15 +1318,6 @@ describe('Signup form component', (): void => {
 	it('should call signup method from auth service on form submit', async () => {
 		const fixture = MockRender(SignupForm);
 
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
-
 		const authService: AuthService = ngMocks.get(AuthService);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
@@ -1327,15 +1344,6 @@ describe('Signup form component', (): void => {
 
 	it('should set user signup email to store on successful form submit', async () => {
 		const fixture = MockRender(SignupForm);
-
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
 
 		const store: MockStore<AppState.IAppState> = ngMocks.get(MockStore);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
@@ -1369,26 +1377,6 @@ describe('Signup form component', (): void => {
 	it('should set field specific api errors to component error messages', async (): Promise<void> => {
 		const fixture = MockRender(SignupForm);
 
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
-		const apiError: HttpErrorResponse = new HttpErrorResponse({
-			status: HttpStatusCode.BadRequest,
-			error: {
-				status: ApiResponseStatus.ERROR,
-				message: 'Client error',
-				errors: [
-					{ field: 'email', message: 'Invalid email format' },
-					{ field: 'nickname', message: 'Invalid nickname format' },
-				],
-			},
-		});
-
 		const authService: AuthService = ngMocks.get(AuthService);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
@@ -1413,7 +1401,7 @@ describe('Signup form component', (): void => {
 
 		const submitEvent = new SubmitEvent('submit');
 
-		jest.spyOn(authService, 'signup').mockRejectedValue(apiError);
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiFieldSpecificErrors);
 
 		signupFormGroup.setValue(signupData);
 		formElement.dispatchEvent(submitEvent);
@@ -1426,26 +1414,6 @@ describe('Signup form component', (): void => {
 
 	it('should call hot toast error for each generic error from auth service signup method', async (): Promise<void> => {
 		const fixture = MockRender(SignupForm);
-
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
-		const apiError: HttpErrorResponse = new HttpErrorResponse({
-			status: HttpStatusCode.BadRequest,
-			error: {
-				status: ApiResponseStatus.ERROR,
-				message: 'Client error',
-				errors: [
-					{ field: null, message: 'Something went wrong' },
-					{ field: null, message: 'Please, try again' },
-				],
-			},
-		});
 
 		const authService: AuthService = ngMocks.get(AuthService);
 		const hotToastService: HotToastService = ngMocks.get(HotToastService);
@@ -1464,7 +1432,7 @@ describe('Signup form component', (): void => {
 
 		const submitEvent = new SubmitEvent('submit');
 
-		jest.spyOn(authService, 'signup').mockRejectedValue(apiError);
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiGeneralError);
 		jest.spyOn(hotToastService, 'error');
 
 		signupFormGroup.setValue(signupData);
@@ -1479,15 +1447,6 @@ describe('Signup form component', (): void => {
 
 	it('should set is loading to false on successful auth service signup call', async (): Promise<void> => {
 		const fixture = MockRender(SignupForm);
-
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
 
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
@@ -1517,15 +1476,6 @@ describe('Signup form component', (): void => {
 	it('should enable form on successful auth service signup call', async (): Promise<void> => {
 		const fixture = MockRender(SignupForm);
 
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
-
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
 			'[data-testid="signup-form"]',
@@ -1551,26 +1501,6 @@ describe('Signup form component', (): void => {
 	it('should set is loading to false on failed auth service signup call', async (): Promise<void> => {
 		const fixture = MockRender(SignupForm);
 
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
-		const apiError: HttpErrorResponse = new HttpErrorResponse({
-			status: HttpStatusCode.BadRequest,
-			error: {
-				status: ApiResponseStatus.ERROR,
-				message: 'Client error',
-				errors: [
-					{ field: 'email', message: 'Invalid email format' },
-					{ field: 'nickname', message: 'Invalid nickname format' },
-				],
-			},
-		});
-
 		const authService: AuthService = ngMocks.get(AuthService);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
@@ -1589,7 +1519,7 @@ describe('Signup form component', (): void => {
 
 		const submitEvent = new SubmitEvent('submit');
 
-		jest.spyOn(authService, 'signup').mockRejectedValue(apiError);
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiFieldSpecificErrors);
 
 		signupFormGroup.setValue(signupData);
 		formElement.dispatchEvent(submitEvent);
@@ -1601,26 +1531,6 @@ describe('Signup form component', (): void => {
 
 	it('should enable form on failed auth service signup call', async (): Promise<void> => {
 		const fixture = MockRender(SignupForm);
-
-		const signupData: AuthTypes.IAuthRequest = {
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		};
-		const apiError: HttpErrorResponse = new HttpErrorResponse({
-			status: HttpStatusCode.BadRequest,
-			error: {
-				status: ApiResponseStatus.ERROR,
-				message: 'Client error',
-				errors: [
-					{ field: 'email', message: 'Invalid email format' },
-					{ field: 'nickname', message: 'Invalid nickname format' },
-				],
-			},
-		});
 
 		const authService: AuthService = ngMocks.get(AuthService);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
@@ -1638,7 +1548,7 @@ describe('Signup form component', (): void => {
 
 		const submitEvent = new SubmitEvent('submit');
 
-		jest.spyOn(authService, 'signup').mockRejectedValue(apiError);
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiFieldSpecificErrors);
 
 		signupFormGroup.setValue(signupData);
 		formElement.dispatchEvent(submitEvent);
