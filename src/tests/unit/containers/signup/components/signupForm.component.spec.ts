@@ -1,8 +1,10 @@
 import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HotToastService } from '@ngxpert/hot-toast';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
 	IMockBuilderExtended,
 	MockBuilder,
-	MockedComponentFixture,
 	MockedDebugElement,
 	MockRender,
 	ngMocks,
@@ -13,13 +15,58 @@ import { SignupForm } from '@containers/signup/components';
 import { TextInput } from '@components/inputs';
 import { PrimaryButton } from '@components/buttons';
 
+import { AuthService } from '@services';
+
+import { AppState, AuthTypes } from '@customTypes';
+
+import { ApiResponseStatus } from '@enums';
+
 describe('Signup form component', (): void => {
 	beforeEach((): IMockBuilderExtended => {
-		return MockBuilder(SignupForm).mock(TextInput).mock(PrimaryButton).keep(ReactiveFormsModule);
+		return MockBuilder(SignupForm)
+			.mock(TextInput)
+			.mock(PrimaryButton)
+			.mock(AuthService)
+			.mock(HotToastService)
+			.keep(ReactiveFormsModule)
+			.provide(provideMockStore({}));
 	});
 
 	afterEach((): void => {
 		jest.clearAllMocks();
+	});
+
+	const signupData: AuthTypes.IAuthRequest = {
+		firstName: 'Tony',
+		lastName: 'Stark',
+		nickname: 't.stark',
+		email: 't.stark@avengers.com',
+		password: 'Qwerty12345!',
+		passwordConfirmation: 'Qwerty12345!',
+	};
+
+	const apiFieldSpecificErrors: HttpErrorResponse = new HttpErrorResponse({
+		status: HttpStatusCode.BadRequest,
+		error: {
+			status: ApiResponseStatus.ERROR,
+			message: 'Client error',
+			errors: [
+				{ field: 'email', message: 'Invalid email format' },
+				{ field: 'nickname', message: 'Invalid nickname format' },
+			],
+		},
+	});
+
+	const apiGeneralError: HttpErrorResponse = new HttpErrorResponse({
+		status: HttpStatusCode.BadRequest,
+		error: {
+			status: ApiResponseStatus.ERROR,
+			message: 'Client error',
+			errors: [
+				{ field: null, message: 'Something went wrong' },
+				{ field: null, message: 'Please, try again' },
+			],
+		},
 	});
 
 	it('should render first name input with provided default inputs', (): void => {
@@ -30,23 +77,23 @@ describe('Signup form component', (): void => {
 		);
 		const firstNameInput: TextInput = debugElement.componentInstance;
 
-		expect(firstNameInput.inputId).toBe('signup-form-first-name');
-		expect(firstNameInput.name).toBe('firstName');
-		expect(firstNameInput.placeholder).toBe('Tony');
-		expect(firstNameInput.label).toBe('First Name');
-		expect(firstNameInput.leftIconName).toBe('user');
-		expect(firstNameInput.autocomplete).toBe('given-name');
-		expect(firstNameInput.maxlength).toBe(255);
-		expect(firstNameInput.formControlInstance).toBeInstanceOf(FormControl);
-		expect(firstNameInput.errorMessage).toBe('');
-		expect(firstNameInput.rightIconName).toBeNull();
-		expect(firstNameInput.isValid).toBe(false);
-		expect(firstNameInput.isDisabled).toBe(false);
-		expect(firstNameInput.isRequired).toBe(true);
+		expect(firstNameInput.inputId()).toBe('signup-form-first-name');
+		expect(firstNameInput.name()).toBe('firstName');
+		expect(firstNameInput.placeholder()).toBe('Tony');
+		expect(firstNameInput.label()).toBe('First Name');
+		expect(firstNameInput.leftIconName()).toBe('user');
+		expect(firstNameInput.autocomplete()).toBe('given-name');
+		expect(firstNameInput.maxlength()).toBe(255);
+		expect(firstNameInput.formControlInstance()).toBeInstanceOf(FormControl);
+		expect(firstNameInput.errorMessage()).toBe('');
+		expect(firstNameInput.rightIconName()).toBeNull();
+		expect(firstNameInput.isValid()).toBe(false);
+		expect(firstNameInput.isDisabled()).toBe(false);
+		expect(firstNameInput.isRequired()).toBe(true);
 	});
 
 	it('should provide error message if first name input is empty and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -56,11 +103,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(firstNameInput.errorMessage).toBe('Must be at least 3 characters long');
+		expect(firstNameInput.errorMessage()).toBe('Must be at least 3 characters long');
 	});
 
 	it('should provide error message to first name input if it has value less than 3 characters long and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -76,11 +123,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(firstNameInput.errorMessage).toBe('Must be at least 3 characters long');
+		expect(firstNameInput.errorMessage()).toBe('Must be at least 3 characters long');
 	});
 
 	it('should provide empty error message to first name input if it has valid value and blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -96,11 +143,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(firstNameInput.errorMessage).toBe('');
+		expect(firstNameInput.errorMessage()).toBe('');
 	});
 
 	it('should provide null as right icon name to first name input if it is has not valid value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -110,11 +157,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(firstNameInput.rightIconName).toBeNull();
+		expect(firstNameInput.rightIconName()).toBeNull();
 	});
 
 	it('should provide check mark as right icon name to first name input if it has valid value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -131,11 +178,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(firstNameInput.rightIconName).toBe('checkMark');
+		expect(firstNameInput.rightIconName()).toBe('checkMark');
 	});
 
 	it('should set is valid to true to first name input if it is valid', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -151,11 +198,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(firstNameInput.isValid).toBe(true);
+		expect(firstNameInput.isValid()).toBe(true);
 	});
 
 	it('should set is disabled to true to first name input if it form control is disabled', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-first-name"]',
@@ -171,7 +218,7 @@ describe('Signup form component', (): void => {
 		formControl.markAsDirty();
 		fixture.detectChanges();
 
-		expect(firstNameInput.isDisabled).toBe(true);
+		expect(firstNameInput.isDisabled()).toBe(true);
 	});
 
 	it('should render last name input with provided default inputs', (): void => {
@@ -182,22 +229,22 @@ describe('Signup form component', (): void => {
 		);
 		const lastNameInput: TextInput = debugElement.componentInstance;
 
-		expect(lastNameInput.inputId).toBe('signup-form-last-name');
-		expect(lastNameInput.name).toBe('lastName');
-		expect(lastNameInput.placeholder).toBe('Stark');
-		expect(lastNameInput.label).toBe('Last Name');
-		expect(lastNameInput.leftIconName).toBe('user');
-		expect(lastNameInput.autocomplete).toBe('family-name');
-		expect(lastNameInput.maxlength).toBe(255);
-		expect(lastNameInput.formControlInstance).toBeInstanceOf(FormControl);
-		expect(lastNameInput.errorMessage).toBe('');
-		expect(lastNameInput.rightIconName).toBeNull();
-		expect(lastNameInput.isValid).toBe(false);
-		expect(lastNameInput.isDisabled).toBe(false);
+		expect(lastNameInput.inputId()).toBe('signup-form-last-name');
+		expect(lastNameInput.name()).toBe('lastName');
+		expect(lastNameInput.placeholder()).toBe('Stark');
+		expect(lastNameInput.label()).toBe('Last Name');
+		expect(lastNameInput.leftIconName()).toBe('user');
+		expect(lastNameInput.autocomplete()).toBe('family-name');
+		expect(lastNameInput.maxlength()).toBe(255);
+		expect(lastNameInput.formControlInstance()).toBeInstanceOf(FormControl);
+		expect(lastNameInput.errorMessage()).toBe('');
+		expect(lastNameInput.rightIconName()).toBeNull();
+		expect(lastNameInput.isValid()).toBe(false);
+		expect(lastNameInput.isDisabled()).toBe(false);
 	});
 
 	it('should provide error message to last name input if it has value less than 3 characters long and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -213,11 +260,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(lastNameInput.errorMessage).toBe('Must be at least 3 characters long');
+		expect(lastNameInput.errorMessage()).toBe('Must be at least 3 characters long');
 	});
 
 	it('should provide empty error message to last name input if it has valid value and blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -233,11 +280,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(lastNameInput.errorMessage).toBe('');
+		expect(lastNameInput.errorMessage()).toBe('');
 	});
 
 	it('should provide empty error message to last name input if it dirty and do not have value', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -252,11 +299,11 @@ describe('Signup form component', (): void => {
 
 		fixture.detectChanges();
 
-		expect(lastNameInput.errorMessage).toBe('');
+		expect(lastNameInput.errorMessage()).toBe('');
 	});
 
 	it('should provide null as right icon name to last name input if it is has value less then 3 characters long', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -272,11 +319,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(lastNameInput.rightIconName).toBeNull();
+		expect(lastNameInput.rightIconName()).toBeNull();
 	});
 
 	it('should provide check mark as right icon name to last name input if it is dirty and do not have value', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -291,11 +338,11 @@ describe('Signup form component', (): void => {
 
 		fixture.detectChanges();
 
-		expect(lastNameInput.rightIconName).toBe('checkMark');
+		expect(lastNameInput.rightIconName()).toBe('checkMark');
 	});
 
 	it('should provide check mark as right icon name to last name input if it is dirty and has valid value', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -312,11 +359,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(lastNameInput.rightIconName).toBe('checkMark');
+		expect(lastNameInput.rightIconName()).toBe('checkMark');
 	});
 
 	it('should provide is valid true to last name input if it is dirty and has valid value', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -333,11 +380,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(lastNameInput.isValid).toBe(true);
+		expect(lastNameInput.isValid()).toBe(true);
 	});
 
 	it('should provide is valid true to last name input if it is dirty and do not have value', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -352,11 +399,11 @@ describe('Signup form component', (): void => {
 
 		fixture.detectChanges();
 
-		expect(lastNameInput.isValid).toBe(true);
+		expect(lastNameInput.isValid()).toBe(true);
 	});
 
 	it('should set is disabled to true to last name input if it form control is disabled', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-last-name"]',
@@ -372,7 +419,7 @@ describe('Signup form component', (): void => {
 		formControl.markAsDirty();
 		fixture.detectChanges();
 
-		expect(lastNameInput.isDisabled).toBe(true);
+		expect(lastNameInput.isDisabled()).toBe(true);
 	});
 
 	it('should render nickname input with provided default inputs', (): void => {
@@ -383,23 +430,23 @@ describe('Signup form component', (): void => {
 		);
 		const nicknameInput: TextInput = debugElement.componentInstance;
 
-		expect(nicknameInput.inputId).toBe('signup-form-nickname');
-		expect(nicknameInput.name).toBe('nickname');
-		expect(nicknameInput.placeholder).toBe('t.stark');
-		expect(nicknameInput.label).toBe('Nickname');
-		expect(nicknameInput.leftIconName).toBe('atSign');
-		expect(nicknameInput.autocomplete).toBe('username');
-		expect(nicknameInput.maxlength).toBe(255);
-		expect(nicknameInput.formControlInstance).toBeInstanceOf(FormControl);
-		expect(nicknameInput.errorMessage).toBe('');
-		expect(nicknameInput.rightIconName).toBeNull();
-		expect(nicknameInput.isValid).toBe(false);
-		expect(nicknameInput.isDisabled).toBe(false);
-		expect(nicknameInput.isRequired).toBe(true);
+		expect(nicknameInput.inputId()).toBe('signup-form-nickname');
+		expect(nicknameInput.name()).toBe('nickname');
+		expect(nicknameInput.placeholder()).toBe('t.stark');
+		expect(nicknameInput.label()).toBe('Nickname');
+		expect(nicknameInput.leftIconName()).toBe('atSign');
+		expect(nicknameInput.autocomplete()).toBe('username');
+		expect(nicknameInput.maxlength()).toBe(255);
+		expect(nicknameInput.formControlInstance()).toBeInstanceOf(FormControl);
+		expect(nicknameInput.errorMessage()).toBe('');
+		expect(nicknameInput.rightIconName()).toBeNull();
+		expect(nicknameInput.isValid()).toBe(false);
+		expect(nicknameInput.isDisabled()).toBe(false);
+		expect(nicknameInput.isRequired()).toBe(true);
 	});
 
 	it('should provide error message if nickname input is empty and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -409,11 +456,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(nicknameInput.errorMessage).toBe('Must be at least 3 characters long');
+		expect(nicknameInput.errorMessage()).toBe('Must be at least 3 characters long');
 	});
 
 	it('should provide error message to nickname input if it has value less than 3 characters long and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -429,11 +476,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(nicknameInput.errorMessage).toBe('Must be at least 3 characters long');
+		expect(nicknameInput.errorMessage()).toBe('Must be at least 3 characters long');
 	});
 
 	it('should provide empty error message to nickname input if it has valid value and blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -449,11 +496,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(nicknameInput.errorMessage).toBe('');
+		expect(nicknameInput.errorMessage()).toBe('');
 	});
 
 	it('should provide null as right icon name to nickname input if it is has not valid value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -463,11 +510,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(nicknameInput.rightIconName).toBeNull();
+		expect(nicknameInput.rightIconName()).toBeNull();
 	});
 
 	it('should provide check mark as right icon name to nickname input if it has valid value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -484,11 +531,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(nicknameInput.rightIconName).toBe('checkMark');
+		expect(nicknameInput.rightIconName()).toBe('checkMark');
 	});
 
 	it('should set is valid to true to nickname input if it is valid', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -504,11 +551,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(nicknameInput.isValid).toBe(true);
+		expect(nicknameInput.isValid()).toBe(true);
 	});
 
 	it('should set is disabled to true to nickname input if it form control is disabled', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-nickname"]',
@@ -524,7 +571,7 @@ describe('Signup form component', (): void => {
 		formControl.markAsDirty();
 		fixture.detectChanges();
 
-		expect(nicknameInput.isDisabled).toBe(true);
+		expect(nicknameInput.isDisabled()).toBe(true);
 	});
 
 	it('should render email input with provided default inputs', (): void => {
@@ -535,24 +582,24 @@ describe('Signup form component', (): void => {
 		);
 		const emailInput: TextInput = debugElement.componentInstance;
 
-		expect(emailInput.inputId).toBe('signup-form-email');
-		expect(emailInput.name).toBe('email');
-		expect(emailInput.placeholder).toBe('t.stark@avengers.com');
-		expect(emailInput.label).toBe('Email');
-		expect(emailInput.leftIconName).toBe('mail');
-		expect(emailInput.autocomplete).toBe('email');
-		expect(emailInput.type).toBe('email');
-		expect(emailInput.maxlength).toBe(255);
-		expect(emailInput.formControlInstance).toBeInstanceOf(FormControl);
-		expect(emailInput.errorMessage).toBe('');
-		expect(emailInput.rightIconName).toBeNull();
-		expect(emailInput.isValid).toBe(false);
-		expect(emailInput.isDisabled).toBe(false);
-		expect(emailInput.isRequired).toBe(true);
+		expect(emailInput.inputId()).toBe('signup-form-email');
+		expect(emailInput.name()).toBe('email');
+		expect(emailInput.placeholder()).toBe('t.stark@avengers.com');
+		expect(emailInput.label()).toBe('Email');
+		expect(emailInput.leftIconName()).toBe('mail');
+		expect(emailInput.autocomplete()).toBe('email');
+		expect(emailInput.type()).toBe('email');
+		expect(emailInput.maxlength()).toBe(255);
+		expect(emailInput.formControlInstance()).toBeInstanceOf(FormControl);
+		expect(emailInput.errorMessage()).toBe('');
+		expect(emailInput.rightIconName()).toBeNull();
+		expect(emailInput.isValid()).toBe(false);
+		expect(emailInput.isDisabled()).toBe(false);
+		expect(emailInput.isRequired()).toBe(true);
 	});
 
 	it('should provide error message if email input is empty and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -562,11 +609,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.errorMessage).toBe('Invalid email');
+		expect(emailInput.errorMessage()).toBe('Invalid email');
 	});
 
 	it('should provide error message to email input if it has value less than 3 characters long and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -582,11 +629,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.errorMessage).toBe('Invalid email');
+		expect(emailInput.errorMessage()).toBe('Invalid email');
 	});
 
 	it('should provide error message to email input if it has not a valid email value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -602,11 +649,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.errorMessage).toBe('Invalid email');
+		expect(emailInput.errorMessage()).toBe('Invalid email');
 	});
 
 	it('should provide empty error message to email input if it has valid value and blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -622,11 +669,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.errorMessage).toBe('');
+		expect(emailInput.errorMessage()).toBe('');
 	});
 
 	it('should provide null as right icon name to email input if it is has not valid value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -636,11 +683,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.rightIconName).toBeNull();
+		expect(emailInput.rightIconName()).toBeNull();
 	});
 
 	it('should provide check mark as right icon name to email input if it has valid value and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -657,11 +704,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.rightIconName).toBe('checkMark');
+		expect(emailInput.rightIconName()).toBe('checkMark');
 	});
 
 	it('should set is valid to true to email input if it is valid', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -677,11 +724,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(emailInput.isValid).toBe(true);
+		expect(emailInput.isValid()).toBe(true);
 	});
 
 	it('should set is disabled to true to email input if it form control is disabled', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-email"]',
@@ -697,7 +744,7 @@ describe('Signup form component', (): void => {
 		formControl.markAsDirty();
 		fixture.detectChanges();
 
-		expect(emailInput.isDisabled).toBe(true);
+		expect(emailInput.isDisabled()).toBe(true);
 	});
 
 	it('should render password input with provided default inputs', (): void => {
@@ -708,25 +755,25 @@ describe('Signup form component', (): void => {
 		);
 		const passwordInput: TextInput = debugElement.componentInstance;
 
-		expect(passwordInput.inputId).toBe('signup-form-password');
-		expect(passwordInput.name).toBe('password');
-		expect(passwordInput.placeholder).toBe('At least 6 characters');
-		expect(passwordInput.label).toBe('Password');
-		expect(passwordInput.leftIconName).toBe('lock');
-		expect(passwordInput.rightIconName).toBe('eye');
-		expect(passwordInput.type).toBe('password');
-		expect(passwordInput.maxlength).toBe(255);
-		expect(passwordInput.formControlInstance).toBeInstanceOf(FormControl);
-		expect(passwordInput.errorMessage).toBe('');
-		expect(passwordInput.isValid).toBe(false);
-		expect(passwordInput.isDisabled).toBe(false);
-		expect(passwordInput.isRightIconClickable).toBe(true);
-		expect(passwordInput.disableCopyAndPaste).toBe(true);
-		expect(passwordInput.isRequired).toBe(true);
+		expect(passwordInput.inputId()).toBe('signup-form-password');
+		expect(passwordInput.name()).toBe('password');
+		expect(passwordInput.placeholder()).toBe('At least 6 characters');
+		expect(passwordInput.label()).toBe('Password');
+		expect(passwordInput.leftIconName()).toBe('lock');
+		expect(passwordInput.rightIconName()).toBe('eye');
+		expect(passwordInput.type()).toBe('password');
+		expect(passwordInput.maxlength()).toBe(255);
+		expect(passwordInput.formControlInstance()).toBeInstanceOf(FormControl);
+		expect(passwordInput.errorMessage()).toBe('');
+		expect(passwordInput.isValid()).toBe(false);
+		expect(passwordInput.isDisabled()).toBe(false);
+		expect(passwordInput.isRightIconClickable()).toBe(true);
+		expect(passwordInput.disableCopyAndPaste()).toBe(true);
+		expect(passwordInput.isRequired()).toBe(true);
 	});
 
 	it('should provide error message if password input is empty and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -736,13 +783,13 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordInput.errorMessage).toBe(
+		expect(passwordInput.errorMessage()).toBe(
 			'Must be at least 6 characters long, contains 1 number and 1 uppercase character',
 		);
 	});
 
 	it('should provide error message to password input if it has value less than 6 characters long and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -758,13 +805,13 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordInput.errorMessage).toBe(
+		expect(passwordInput.errorMessage()).toBe(
 			'Must be at least 6 characters long, contains 1 number and 1 uppercase character',
 		);
 	});
 
 	it('should provide error message to password input if its value does not contains at least 1 upper case character and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -780,13 +827,13 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordInput.errorMessage).toBe(
+		expect(passwordInput.errorMessage()).toBe(
 			'Must be at least 6 characters long, contains 1 number and 1 uppercase character',
 		);
 	});
 
 	it('should provide error message to password input if its value does not contains at least 1 number and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -802,13 +849,13 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordInput.errorMessage).toBe(
+		expect(passwordInput.errorMessage()).toBe(
 			'Must be at least 6 characters long, contains 1 number and 1 uppercase character',
 		);
 	});
 
 	it('should provide empty error message to password input if it has valid value and blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -824,11 +871,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordInput.errorMessage).toBe('');
+		expect(passwordInput.errorMessage()).toBe('');
 	});
 
 	it('should provide eye crossed as right icon name to password input if right icon is eye and it was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -838,11 +885,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordInput.rightIconName).toBe('eyeCrossed');
+		expect(passwordInput.rightIconName()).toBe('eyeCrossed');
 	});
 
 	it('should provide eye as right icon name to password input if right icon is eye crossed and it was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -853,11 +900,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordInput.rightIconName).toBe('eye');
+		expect(passwordInput.rightIconName()).toBe('eye');
 	});
 
 	it('should provide input type as text to password input if type is password and right icon was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -867,11 +914,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordInput.type).toBe('text');
+		expect(passwordInput.type()).toBe('text');
 	});
 
 	it('should provide input type as password to password input if type is text and right icon was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -882,11 +929,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordInput.type).toBe('password');
+		expect(passwordInput.type()).toBe('password');
 	});
 
 	it('should set is valid to true to password input if it is valid', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -902,11 +949,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordInput.isValid).toBe(true);
+		expect(passwordInput.isValid()).toBe(true);
 	});
 
 	it('should set is disabled to true to password input if it form control is disabled', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -922,7 +969,7 @@ describe('Signup form component', (): void => {
 		formControl.markAsDirty();
 		fixture.detectChanges();
 
-		expect(passwordInput.isDisabled).toBe(true);
+		expect(passwordInput.isDisabled()).toBe(true);
 	});
 
 	it('should render password confirmation input with provided default inputs', (): void => {
@@ -933,25 +980,25 @@ describe('Signup form component', (): void => {
 		);
 		const passwordConfirmationInput: TextInput = debugElement.componentInstance;
 
-		expect(passwordConfirmationInput.inputId).toBe('signup-form-password-confirmation');
-		expect(passwordConfirmationInput.name).toBe('passwordConfirmation');
-		expect(passwordConfirmationInput.placeholder).toBe('Repeat your password');
-		expect(passwordConfirmationInput.label).toBe('Confirm password');
-		expect(passwordConfirmationInput.leftIconName).toBe('lock');
-		expect(passwordConfirmationInput.rightIconName).toBe('eye');
-		expect(passwordConfirmationInput.type).toBe('password');
-		expect(passwordConfirmationInput.maxlength).toBe(255);
-		expect(passwordConfirmationInput.formControlInstance).toBeInstanceOf(FormControl);
-		expect(passwordConfirmationInput.errorMessage).toBe('');
-		expect(passwordConfirmationInput.isValid).toBe(false);
-		expect(passwordConfirmationInput.isDisabled).toBe(false);
-		expect(passwordConfirmationInput.isRightIconClickable).toBe(true);
-		expect(passwordConfirmationInput.disableCopyAndPaste).toBe(true);
-		expect(passwordConfirmationInput.isRequired).toBe(true);
+		expect(passwordConfirmationInput.inputId()).toBe('signup-form-password-confirmation');
+		expect(passwordConfirmationInput.name()).toBe('passwordConfirmation');
+		expect(passwordConfirmationInput.placeholder()).toBe('Repeat your password');
+		expect(passwordConfirmationInput.label()).toBe('Confirm password');
+		expect(passwordConfirmationInput.leftIconName()).toBe('lock');
+		expect(passwordConfirmationInput.rightIconName()).toBe('eye');
+		expect(passwordConfirmationInput.type()).toBe('password');
+		expect(passwordConfirmationInput.maxlength()).toBe(255);
+		expect(passwordConfirmationInput.formControlInstance()).toBeInstanceOf(FormControl);
+		expect(passwordConfirmationInput.errorMessage()).toBe('');
+		expect(passwordConfirmationInput.isValid()).toBe(false);
+		expect(passwordConfirmationInput.isDisabled()).toBe(false);
+		expect(passwordConfirmationInput.isRightIconClickable()).toBe(true);
+		expect(passwordConfirmationInput.disableCopyAndPaste()).toBe(true);
+		expect(passwordConfirmationInput.isRequired()).toBe(true);
 	});
 
 	it('should provide error message if password confirmation input is empty and was blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password-confirmation"]',
@@ -961,11 +1008,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.errorMessage).toBe('Must match to the password');
+		expect(passwordConfirmationInput.errorMessage()).toBe('Must match to the password');
 	});
 
 	it('should provide error message to password confirmation input if it has value that does not match to password input', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const passwordDebugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -992,11 +1039,11 @@ describe('Signup form component', (): void => {
 		passwordConfirmationDebugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.errorMessage).toBe('Must match to the password');
+		expect(passwordConfirmationInput.errorMessage()).toBe('Must match to the password');
 	});
 
 	it('should provide empty error message to password confirmation input if it has valid value and blurred', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const passwordDebugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -1023,11 +1070,11 @@ describe('Signup form component', (): void => {
 		passwordConfirmationDebugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.errorMessage).toBe('');
+		expect(passwordConfirmationInput.errorMessage()).toBe('');
 	});
 
 	it('should provide eye crossed as right icon name to password confirmation input if right icon is eye and it was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password-confirmation"]',
@@ -1037,11 +1084,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.rightIconName).toBe('eyeCrossed');
+		expect(passwordConfirmationInput.rightIconName()).toBe('eyeCrossed');
 	});
 
 	it('should provide eye as right icon name to password confirmation input if right icon is eye crossed and it was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password-confirmation"]',
@@ -1052,11 +1099,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.rightIconName).toBe('eye');
+		expect(passwordConfirmationInput.rightIconName()).toBe('eye');
 	});
 
 	it('should provide input type as text to password confirmation input if type is password and right icon was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password-confirmation"]',
@@ -1066,11 +1113,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.type).toBe('text');
+		expect(passwordConfirmationInput.type()).toBe('text');
 	});
 
 	it('should provide input type as password to password confirmation input if type is text and right icon was clicked', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password-confirmation"]',
@@ -1081,11 +1128,11 @@ describe('Signup form component', (): void => {
 		debugElement.triggerEventHandler('rightIconClicked');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.type).toBe('password');
+		expect(passwordConfirmationInput.type()).toBe('password');
 	});
 
 	it('should set is valid to true to password confirmation input if it is valid', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const passwordDebugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password"]',
@@ -1112,11 +1159,11 @@ describe('Signup form component', (): void => {
 		passwordConfirmationDebugElement.triggerEventHandler('blurred');
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.isValid).toBe(true);
+		expect(passwordConfirmationInput.isValid()).toBe(true);
 	});
 
 	it('should set is disabled to true to password confirmation input if it form control is disabled', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
 			'[inputId="signup-form-password-confirmation"]',
@@ -1132,7 +1179,7 @@ describe('Signup form component', (): void => {
 		formControl.markAsDirty();
 		fixture.detectChanges();
 
-		expect(passwordConfirmationInput.isDisabled).toBe(true);
+		expect(passwordConfirmationInput.isDisabled()).toBe(true);
 	});
 
 	it('should render primary button with provided default inputs', (): void => {
@@ -1141,14 +1188,14 @@ describe('Signup form component', (): void => {
 		const debugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
 		const primaryButton: PrimaryButton = debugElement.componentInstance;
 
-		expect(primaryButton.type).toBe('submit');
-		expect(primaryButton.text).toBe('Create Account');
-		expect(primaryButton.isDisabled).toBe(true);
-		expect(primaryButton.isLoading).toBe(false);
+		expect(primaryButton.type()).toBe('submit');
+		expect(primaryButton.text()).toBe('Create Account');
+		expect(primaryButton.isDisabled()).toBe(true);
+		expect(primaryButton.isLoading()).toBe(false);
 	});
 
 	it('should provide valid text for button if the form is loading', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const buttonDebugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
@@ -1164,11 +1211,11 @@ describe('Signup form component', (): void => {
 		formElement.dispatchEvent(submitEvent);
 		fixture.detectChanges();
 
-		expect(primaryButton.text).toBe('Creating your account...');
+		expect(primaryButton.text()).toBe('Creating your account...');
 	});
 
 	it('should provide is disabled true if form is submitting', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const buttonDebugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
@@ -1184,11 +1231,11 @@ describe('Signup form component', (): void => {
 		formElement.dispatchEvent(submitEvent);
 		fixture.detectChanges();
 
-		expect(primaryButton.isDisabled).toBe(true);
+		expect(primaryButton.isDisabled()).toBe(true);
 	});
 
 	it('should provide is disabled false if form has valid value and not submitting', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const buttonDebugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
@@ -1203,22 +1250,15 @@ describe('Signup form component', (): void => {
 		);
 		const signupFormGroup: FormGroup = formGroupDirective.control;
 
-		signupFormGroup.setValue({
-			firstName: 'Tony',
-			lastName: 'Stark',
-			nickname: 't.stark',
-			email: 't.stark@avengers.com',
-			password: 'Qwerty12345!',
-			passwordConfirmation: 'Qwerty12345!',
-		});
+		signupFormGroup.setValue(signupData);
 
 		fixture.detectChanges();
 
-		expect(primaryButton.isDisabled).toBe(false);
+		expect(primaryButton.isDisabled()).toBe(false);
 	});
 
 	it('should provide is loading true if form is submitting', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const buttonDebugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
 		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
@@ -1234,11 +1274,11 @@ describe('Signup form component', (): void => {
 		formElement.dispatchEvent(submitEvent);
 		fixture.detectChanges();
 
-		expect(primaryButton.isLoading).toBe(true);
+		expect(primaryButton.isLoading()).toBe(true);
 	});
 
 	it('should prevent event default behaviour on form submit ', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
@@ -1256,7 +1296,7 @@ describe('Signup form component', (): void => {
 	});
 
 	it('should disable form group after submitting form', (): void => {
-		const fixture: MockedComponentFixture<SignupForm, SignupForm> = MockRender(SignupForm);
+		const fixture = MockRender(SignupForm);
 
 		const debugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
 			fixture.point,
@@ -1273,5 +1313,248 @@ describe('Signup form component', (): void => {
 		formElement.dispatchEvent(submitEvent);
 
 		expect(signupFormGroup.disabled).toBe(true);
+	});
+
+	it('should call signup method from auth service on form submit', async () => {
+		const fixture = MockRender(SignupForm);
+
+		const authService: AuthService = ngMocks.get(AuthService);
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(authService, 'signup');
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		expect(authService.signup).toHaveBeenCalledTimes(1);
+		expect(authService.signup).toHaveBeenNthCalledWith(1, signupData);
+	});
+
+	it('should set user signup email to store on successful form submit', async () => {
+		const fixture = MockRender(SignupForm);
+
+		const store: MockStore<AppState.IAppState> = ngMocks.get(MockStore);
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(store, 'dispatch');
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(store.dispatch).toHaveBeenCalledTimes(1);
+		expect(store.dispatch).toHaveBeenNthCalledWith(1, {
+			signupEmail: 't.stark@avengers.com',
+			type: '[Signup state] Set signup email',
+		});
+	});
+
+	it('should set field specific api errors to component error messages', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const authService: AuthService = ngMocks.get(AuthService);
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const nicknameDebugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
+			'[inputId="signup-form-nickname"]',
+		);
+		const emailDebugElement: MockedDebugElement<TextInput> = ngMocks.find<TextInput>(
+			'[inputId="signup-form-email"]',
+		);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const nicknameInput: TextInput = nicknameDebugElement.componentInstance;
+		const emailInput: TextInput = emailDebugElement.componentInstance;
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiFieldSpecificErrors);
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(emailInput.errorMessage()).toBe('Invalid email format');
+		expect(nicknameInput.errorMessage()).toBe('Invalid nickname format');
+	});
+
+	it('should call hot toast error for each generic error from auth service signup method', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const authService: AuthService = ngMocks.get(AuthService);
+		const hotToastService: HotToastService = ngMocks.get(HotToastService);
+
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiGeneralError);
+		jest.spyOn(hotToastService, 'error');
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(hotToastService.error).toHaveBeenCalledTimes(2);
+		expect(hotToastService.error).toHaveBeenNthCalledWith(1, 'Something went wrong');
+		expect(hotToastService.error).toHaveBeenNthCalledWith(2, 'Please, try again');
+	});
+
+	it('should set is loading to false on successful auth service signup call', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const buttonDebugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const primaryButton: PrimaryButton = buttonDebugElement.componentInstance;
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(primaryButton.isDisabled()).toBe(false);
+	});
+
+	it('should enable form on successful auth service signup call', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(signupFormGroup.disabled).toBe(false);
+	});
+
+	it('should set is loading to false on failed auth service signup call', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const authService: AuthService = ngMocks.get(AuthService);
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const buttonDebugElement: MockedDebugElement<PrimaryButton> = ngMocks.find(PrimaryButton);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const primaryButton: PrimaryButton = buttonDebugElement.componentInstance;
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiFieldSpecificErrors);
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(primaryButton.isDisabled()).toBe(false);
+	});
+
+	it('should enable form on failed auth service signup call', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const authService: AuthService = ngMocks.get(AuthService);
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(authService, 'signup').mockRejectedValue(apiFieldSpecificErrors);
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(signupFormGroup.disabled).toBe(false);
 	});
 });

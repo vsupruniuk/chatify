@@ -15,15 +15,21 @@ import {
 	Validators,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HotToastService } from '@ngxpert/hot-toast';
+import { Store } from '@ngrx/store';
 
 import { TextInput } from '@components/inputs';
 import { PrimaryButton } from '@components/buttons';
 
-import { AuthTypes, IconsTypes, InputsTypes } from '@customTypes';
+import { AppState, AuthTypes, GlobalTypes, IconsTypes, InputsTypes } from '@customTypes';
 
 import { errorMessagesConfig, passwordConfig } from '@configs';
 
-import { CustomValidator, TypeGuardHelper } from '@helpers';
+import { CustomValidatorHelper, TypeGuardHelper } from '@helpers';
+
+import { AuthService } from '@services';
+
+import { setSignupEmail } from '@state/signup';
 
 @Component({
 	selector: 'ctf-signup-form',
@@ -33,6 +39,12 @@ import { CustomValidator, TypeGuardHelper } from '@helpers';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupForm implements OnInit {
+	private readonly _formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly _destroyRef: DestroyRef = inject(DestroyRef);
+	private readonly _authService: AuthService = inject(AuthService);
+	private readonly _hotToastService: HotToastService = inject(HotToastService);
+	private readonly _store: Store<AppState.IAppState> = inject(Store);
+
 	protected readonly errorMessages: WritableSignal<
 		InputsTypes.TErrorMessages<Partial<AuthTypes.IAuthRequest>>
 	> = signal<InputsTypes.TErrorMessages<Partial<AuthTypes.IAuthRequest>>>({});
@@ -43,9 +55,6 @@ export class SignupForm implements OnInit {
 		signal<InputsTypes.TTextInputType>('password');
 
 	protected readonly isRequestLoading: WritableSignal<boolean> = signal<boolean>(false);
-
-	private readonly _formBuilder: FormBuilder = inject(FormBuilder);
-	private readonly _destroyRef: DestroyRef = inject(DestroyRef);
 
 	protected readonly signupForm = this._formBuilder.nonNullable.group({
 		firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -62,9 +71,23 @@ export class SignupForm implements OnInit {
 		],
 		passwordConfirmation: [
 			'',
-			[Validators.required, CustomValidator.shouldMatchToField('password')],
+			[Validators.required, CustomValidatorHelper.shouldMatchToField('password')],
 		],
 	});
+
+	public ngOnInit(): void {
+		const controlsEntries = Object.entries(this.signupForm.controls);
+
+		for (const entry of controlsEntries) {
+			const [name, control] = entry as [AuthTypes.TAuthRequestFields, FormControl];
+
+			control.events.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((event) => {
+				if (TypeGuardHelper.isStatusChangeEvent(event)) {
+					this.clearFieldErrorIfValid(name, event);
+				}
+			});
+		}
+	}
 
 	protected validateField(fieldName: AuthTypes.TAuthRequestFields): void {
 		const control: FormControl = this.signupForm.controls[fieldName];
@@ -155,22 +178,50 @@ export class SignupForm implements OnInit {
 		}
 	}
 
-	protected signup(): void {
+	protected async signup(): Promise<void> {
 		this.isRequestLoading.set(true);
-		this.signupForm.disable();
+		this.signupForm.disable({ emitEvent: false });
+
+		try {
+			const signupFormValue = this.signupForm.getRawValue();
+
+			await this._authService.signup(signupFormValue);
+
+			this._store.dispatch(setSignupEmail({ signupEmail: signupFormValue.email }));
+		} catch (error: unknown) {
+			if (TypeGuardHelper.isHttpErrorResponse(error) && TypeGuardHelper.isApiError(error.error)) {
+				this._handleApiError(error.error);
+			}
+		} finally {
+			this.isRequestLoading.set(false);
+			this.signupForm.enable({ emitEvent: false });
+		}
 	}
 
-	public ngOnInit(): void {
-		const controlsEntries = Object.entries(this.signupForm.controls);
+	private _handleApiError(error: GlobalTypes.IApiError): void {
+		const fieldSpecificErrors = error.errors.filter(
+			(error: GlobalTypes.IFieldApiError) => error.field !== null,
+		);
+		const genericErrors = error.errors.filter(
+			(error: GlobalTypes.IFieldApiError) => error.field === null,
+		);
 
-		for (const entry of controlsEntries) {
-			const [name, control] = entry as [AuthTypes.TAuthRequestFields, FormControl];
+		fieldSpecificErrors.forEach((fieldApiError: GlobalTypes.IFieldApiError): void => {
+			const field: string = fieldApiError.field as string;
+			const message: string = fieldApiError.message;
 
-			control.events.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((event) => {
-				if (TypeGuardHelper.isStatusChangeEvent(event)) {
-					this.clearFieldErrorIfValid(name, event);
-				}
-			});
-		}
+			this.errorMessages.update(
+				(currentValue: InputsTypes.TErrorMessages<Partial<AuthTypes.IAuthRequest>>) => {
+					return {
+						...currentValue,
+						[field]: message,
+					};
+				},
+			);
+		});
+
+		genericErrors.forEach((error: GlobalTypes.IFieldApiError): void => {
+			this._hotToastService.error(error.message);
+		});
 	}
 }

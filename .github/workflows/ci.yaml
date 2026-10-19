@@ -53,7 +53,7 @@ jobs:
         run: npm run convert-coverage
 
       - name: Build
-        run: npm run build
+        run: npm run build:prod
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9 # v7.0.0

@@ -12,6 +12,7 @@
 		"sourceMap": true,
 		"outDir": "./dist",
 		"baseUrl": "./",
+		"ignoreDeprecations": "6.0",
 		"noPropertyAccessFromIndexSignature": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
@@ -39,6 +40,9 @@
 			"@enums/*": ["src/enums/*"],
 			"@enums": ["src/enums/index"],
 
+			"@environments/*": ["src/environments/*"],
+			"@environments": ["src/environments/index"],
+
 			"@helpers/*": ["src/helpers/*"],
 			"@helpers": ["src/helpers/index"],
 
@@ -46,7 +50,10 @@
 			"@pages": ["src/pages/index"],
 
 			"@services/*": ["src/services/*"],
-			"@services": ["src/services/index"]
+			"@services": ["src/services/index"],
+
+			"@state/*": ["src/state/*"],
+			"@state": ["src/state/index"]
 		}
 	},
 	"angularCompilerOptions": {
@@ -55,5 +62,14 @@
 		"strictInputAccessModifiers": true,
 		"strictTemplates": true
 	},
-	"exclude": ["dist", "node_modules"]
+	"include": [],
+	"exclude": ["dist", "node_modules"],
+	"references": [
+		{
+			"path": "./tsconfig.app.json"
+		},
+		{
+			"path": "./tsconfig.spec.json"
+		}
+	]
 }

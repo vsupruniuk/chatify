@@ -172,8 +172,8 @@ describe('Text input component', (): void => {
 		);
 
 		expect(iconExclamationMarkComponent).not.toBeNull();
-		expect(iconExclamationMarkComponent.height).toBe(13);
-		expect(iconExclamationMarkComponent.width).toBe(13);
+		expect(iconExclamationMarkComponent.height()).toBe(13);
+		expect(iconExclamationMarkComponent.width()).toBe(13);
 	});
 
 	it('should render error message text if error message provided', (): void => {
@@ -205,9 +205,9 @@ describe('Text input component', (): void => {
 
 		expect(iconUserComponent).not.toBeNull();
 
-		expect(iconUserComponent.height).toBe(14);
-		expect(iconUserComponent.width).toBe(14);
-		expect(iconUserComponent.color).toBe(Color.TEXT_FAINT);
+		expect(iconUserComponent.height()).toBe(14);
+		expect(iconUserComponent.width()).toBe(14);
+		expect(iconUserComponent.color()).toBe(Color.TEXT_FAINT);
 	});
 
 	it('should render left icon with accent color if left icon name provided and input is valid', (): void => {
@@ -224,7 +224,7 @@ describe('Text input component', (): void => {
 
 		expect(iconUserComponent).not.toBeNull();
 
-		expect(iconUserComponent.color).toBe(Color.ACCENT);
+		expect(iconUserComponent.color()).toBe(Color.ACCENT);
 	});
 
 	it('should render left icon with error light color if left icon name and error message are provided', (): void => {
@@ -241,7 +241,7 @@ describe('Text input component', (): void => {
 
 		expect(iconUserComponent).not.toBeNull();
 
-		expect(iconUserComponent.color).toBe(Color.ERROR_LIGHT);
+		expect(iconUserComponent.color()).toBe(Color.ERROR_LIGHT);
 	});
 
 	it('should render relevant right icon if right icon name provided', (): void => {
@@ -256,8 +256,8 @@ describe('Text input component', (): void => {
 
 		expect(iconUserComponent).not.toBeNull();
 
-		expect(iconUserComponent.height).toBe(14);
-		expect(iconUserComponent.width).toBe(14);
+		expect(iconUserComponent.height()).toBe(14);
+		expect(iconUserComponent.width()).toBe(14);
 	});
 
 	it('should render right icon as button if right icon name provided and right icon is clickable', (): void => {

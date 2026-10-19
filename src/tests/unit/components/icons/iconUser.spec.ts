@@ -1,4 +1,4 @@
-import { IMockBuilderExtended, MockBuilder, MockedComponentFixture, MockRender } from 'ng-mocks';
+import { IMockBuilderExtended, MockBuilder, MockRender } from 'ng-mocks';
 
 import { IconUser } from '@components/icons';
 
@@ -12,7 +12,7 @@ describe('Icon user component', (): void => {
 	});
 
 	it('should render svg icon', (): void => {
-		const fixture: MockedComponentFixture<IconUser, IconUser> = MockRender(IconUser);
+		const fixture = MockRender(IconUser);
 
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const child: Element | null = host.firstElementChild;

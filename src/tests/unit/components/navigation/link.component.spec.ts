@@ -1,10 +1,4 @@
-import {
-	IMockBuilderExtended,
-	MockBuilder,
-	MockedComponentFixture,
-	MockRender,
-	ngMocks,
-} from 'ng-mocks';
+import { IMockBuilderExtended, MockBuilder, MockRender, ngMocks } from 'ng-mocks';
 
 import { Link } from '@components/navigation';
 import { provideRouter, RouterLink } from '@angular/router';
@@ -23,7 +17,7 @@ describe('Link component', (): void => {
 	});
 
 	it('should render a element', (): void => {
-		const fixture: MockedComponentFixture<Link, Link> = MockRender(Link);
+		const fixture = MockRender(Link);
 
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const child: Element | null = host.firstElementChild;

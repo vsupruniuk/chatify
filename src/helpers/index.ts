@@ -1,2 +1,2 @@
 export * from './typeGuard.helper';
-export * from './customValidator';
+export * from './customValidator.helper';
