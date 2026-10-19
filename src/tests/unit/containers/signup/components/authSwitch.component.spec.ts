@@ -18,8 +18,8 @@ describe('Auth switch component', (): void => {
 
 		expect(iconAppLogoComponent).not.toBeNull();
 
-		expect(iconAppLogoComponent.text).toBe('Log in');
-		expect(iconAppLogoComponent.ariaLabel).toBe('Switch to login page');
-		expect(iconAppLogoComponent.navigateTo).toBe(`/${Route.LOGIN}`);
+		expect(iconAppLogoComponent.text()).toBe('Log in');
+		expect(iconAppLogoComponent.ariaLabel()).toBe('Switch to login page');
+		expect(iconAppLogoComponent.navigateTo()).toBe(`/${Route.LOGIN}`);
 	});
 });

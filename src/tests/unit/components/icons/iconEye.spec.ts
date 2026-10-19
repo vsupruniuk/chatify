@@ -1,4 +1,4 @@
-import { IMockBuilderExtended, MockBuilder, MockedComponentFixture, MockRender } from 'ng-mocks';
+import { IMockBuilderExtended, MockBuilder, MockRender } from 'ng-mocks';
 
 import { IconEye } from '@components/icons';
 
@@ -10,7 +10,7 @@ describe('Icon eye component', (): void => {
 	});
 
 	it('should render svg icon', (): void => {
-		const fixture: MockedComponentFixture<IconEye, IconEye> = MockRender(IconEye);
+		const fixture = MockRender(IconEye);
 
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const child: Element | null = host.firstElementChild;

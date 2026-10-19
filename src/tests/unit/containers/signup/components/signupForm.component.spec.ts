@@ -1,4 +1,5 @@
 import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { HotToastService } from '@ngxpert/hot-toast';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -17,7 +18,7 @@ import { PrimaryButton } from '@components/buttons';
 import { AuthService } from '@services';
 
 import { AppState, AuthTypes } from '@customTypes';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+
 import { ApiResponseStatus } from '@enums';
 
 describe('Signup form component', (): void => {

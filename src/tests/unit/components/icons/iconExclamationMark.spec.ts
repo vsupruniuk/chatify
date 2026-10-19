@@ -1,4 +1,4 @@
-import { IMockBuilderExtended, MockBuilder, MockedComponentFixture, MockRender } from 'ng-mocks';
+import { IMockBuilderExtended, MockBuilder, MockRender } from 'ng-mocks';
 
 import { IconExclamationMark } from '@components/icons';
 
@@ -10,8 +10,7 @@ describe('Icon exclamation mark component', (): void => {
 	});
 
 	it('should render svg icon', (): void => {
-		const fixture: MockedComponentFixture<IconExclamationMark, IconExclamationMark> =
-			MockRender(IconExclamationMark);
+		const fixture = MockRender(IconExclamationMark);
 
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const child: Element | null = host.firstElementChild;

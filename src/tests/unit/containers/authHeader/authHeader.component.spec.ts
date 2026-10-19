@@ -31,8 +31,8 @@ describe('Auth Header component', (): void => {
 		const iconAppLogoComponent: IconAppLogo = ngMocks.get(ngMocks.find(IconAppLogo), IconAppLogo);
 
 		expect(iconAppLogoComponent).not.toBeNull();
-		expect(iconAppLogoComponent.height).toBe(32);
-		expect(iconAppLogoComponent.width).toBe(32);
+		expect(iconAppLogoComponent.height()).toBe(32);
+		expect(iconAppLogoComponent.width()).toBe(32);
 	});
 
 	it('should render auth header title', (): void => {
