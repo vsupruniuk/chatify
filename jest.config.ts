@@ -50,7 +50,9 @@ const config: Config = {
 		'!src/**/*.d.ts',
 
 		'!src/configs/**',
+		'!src/environments/**',
 		'!src/enums/**',
+		'!src/state/**',
 		'!src/tests/**',
 		'!src/types/**',
 	],

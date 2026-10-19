@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 
-export class CustomValidator {
+export class CustomValidatorHelper {
 	public static shouldMatchToField(fieldName: string): ValidatorFn {
 		return (control: AbstractControl): ValidationErrors | null => {
 			const fieldControl: AbstractControl | null = control.parent?.get(fieldName) ?? null;

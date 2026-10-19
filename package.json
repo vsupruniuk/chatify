@@ -20,7 +20,7 @@
 		"lint": "ng lint && npx stylelint \"src/**/*.scss\" --fix",
 		"lint:ci": "ng lint && npx stylelint \"src/**/*.scss\"",
 		"format": "prettier --write \"src/**/*.ts\"",
-		"type-check": "tsc",
+		"type-check": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
 		"prepare": "husky",
 		"convert-coverage": "ts-node scripts/convertHtmlCoverageToSonar.ts"
 	},

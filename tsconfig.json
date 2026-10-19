@@ -62,5 +62,14 @@
 		"strictInputAccessModifiers": true,
 		"strictTemplates": true
 	},
-	"exclude": ["dist", "node_modules"]
+	"include": [],
+	"exclude": ["dist", "node_modules"],
+	"references": [
+		{
+			"path": "./tsconfig.app.json"
+		},
+		{
+			"path": "./tsconfig.spec.json"
+		}
+	]
 }

@@ -25,7 +25,7 @@ import { AppState, AuthTypes, GlobalTypes, IconsTypes, InputsTypes } from '@cust
 
 import { errorMessagesConfig, passwordConfig } from '@configs';
 
-import { CustomValidator, TypeGuardHelper } from '@helpers';
+import { CustomValidatorHelper, TypeGuardHelper } from '@helpers';
 
 import { AuthService } from '@services';
 
@@ -71,7 +71,7 @@ export class SignupForm implements OnInit {
 		],
 		passwordConfirmation: [
 			'',
-			[Validators.required, CustomValidator.shouldMatchToField('password')],
+			[Validators.required, CustomValidatorHelper.shouldMatchToField('password')],
 		],
 	});
 
