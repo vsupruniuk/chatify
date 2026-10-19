@@ -53,6 +53,7 @@ const config: Config = {
 		'!src/environments/**',
 		'!src/enums/**',
 		'!src/state/**',
+		'!src/state/**',
 		'!src/tests/**',
 		'!src/types/**',
 	],
