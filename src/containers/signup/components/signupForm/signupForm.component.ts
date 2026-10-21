@@ -14,6 +14,7 @@ import {
 	StatusChangeEvent,
 	Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HotToastService } from '@ngxpert/hot-toast';
 import { Store } from '@ngrx/store';
@@ -31,6 +32,8 @@ import { AuthService } from '@services';
 
 import { setSignupEmail } from '@state/signup';
 
+import { Route } from '@enums';
+
 @Component({
 	selector: 'ctf-signup-form',
 	imports: [TextInput, PrimaryButton, ReactiveFormsModule],
@@ -44,6 +47,7 @@ export class SignupForm implements OnInit {
 	private readonly _authService: AuthService = inject(AuthService);
 	private readonly _hotToastService: HotToastService = inject(HotToastService);
 	private readonly _store: Store<AppState.IAppState> = inject(Store);
+	private readonly _router: Router = inject(Router);
 
 	protected readonly errorMessages: WritableSignal<
 		InputsTypes.TErrorMessages<Partial<AuthTypes.IAuthRequest>>
@@ -188,6 +192,8 @@ export class SignupForm implements OnInit {
 			await this._authService.signup(signupFormValue);
 
 			this._store.dispatch(setSignupEmail({ signupEmail: signupFormValue.email }));
+
+			await this._router.navigate([Route.ACTIVATE_ACCOUNT]);
 		} catch (error: unknown) {
 			if (TypeGuardHelper.isHttpErrorResponse(error) && TypeGuardHelper.isApiError(error.error)) {
 				this._handleApiError(error.error);

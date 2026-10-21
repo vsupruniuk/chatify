@@ -26,4 +26,13 @@ export const routesConfig: Routes = [
 			return module.LoginPage;
 		},
 	},
+	{
+		path: Route.ACTIVATE_ACCOUNT,
+		title: PageTitle.ACTIVATE_ACCOUNT,
+		loadComponent: async () => {
+			const module = await import('@pages/activateAccount/activateAccountPage.component');
+
+			return module.ActivateAccountPage;
+		},
+	},
 ] as const;

@@ -1,5 +1,6 @@
 import { FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { HotToastService } from '@ngxpert/hot-toast';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -19,7 +20,7 @@ import { AuthService } from '@services';
 
 import { AppState, AuthTypes } from '@customTypes';
 
-import { ApiResponseStatus } from '@enums';
+import { ApiResponseStatus, Route } from '@enums';
 
 describe('Signup form component', (): void => {
 	beforeEach((): IMockBuilderExtended => {
@@ -28,6 +29,7 @@ describe('Signup form component', (): void => {
 			.mock(PrimaryButton)
 			.mock(AuthService)
 			.mock(HotToastService)
+			.mock(Router)
 			.keep(ReactiveFormsModule)
 			.provide(provideMockStore({}));
 	});
@@ -1496,6 +1498,35 @@ describe('Signup form component', (): void => {
 		await fixture.whenStable();
 
 		expect(signupFormGroup.disabled).toBe(false);
+	});
+
+	it('should redirect to activate account page on successful auth service signup call', async (): Promise<void> => {
+		const fixture = MockRender(SignupForm);
+
+		const formDebugElement: MockedDebugElement<HTMLFormElement> = ngMocks.find<HTMLFormElement>(
+			fixture.point,
+			'[data-testid="signup-form"]',
+		);
+		const formGroupDirective: FormGroupDirective = ngMocks.get(
+			formDebugElement,
+			FormGroupDirective,
+		);
+		const router: Router = ngMocks.get(Router);
+
+		const formElement: HTMLFormElement = formDebugElement.nativeElement;
+		const signupFormGroup: FormGroup = formGroupDirective.control;
+
+		const submitEvent = new SubmitEvent('submit');
+
+		jest.spyOn(router, 'navigate');
+
+		signupFormGroup.setValue(signupData);
+		formElement.dispatchEvent(submitEvent);
+
+		await fixture.whenStable();
+
+		expect(router.navigate).toHaveBeenCalledTimes(1);
+		expect(router.navigate).toHaveBeenNthCalledWith(1, [Route.ACTIVATE_ACCOUNT]);
 	});
 
 	it('should set is loading to false on failed auth service signup call', async (): Promise<void> => {
