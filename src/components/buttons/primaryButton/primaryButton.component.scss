@@ -2,6 +2,10 @@
 @use "/styles/shared/mixins";
 @use "/styles/shared/functions";
 
+:host {
+  display: block;
+}
+
 .primary-button {
   display: flex;
   gap: 8px;
