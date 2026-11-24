@@ -186,7 +186,7 @@ describe('Text input component', (): void => {
 
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const child: HTMLSpanElement | null = host.querySelector(
-			'[data-testid="text-input-error-message"]',
+			`[data-testid="${requiredInputs.inputId}-error-message"]`,
 		);
 
 		expect(child).not.toBeNull();
@@ -293,7 +293,7 @@ describe('Text input component', (): void => {
 		const componentInstance: TextInput = fixture.point.componentInstance as TextInput;
 		const host: HTMLElement = fixture.point.nativeElement as HTMLElement;
 		const button: HTMLButtonElement = host.querySelector(
-			'[data-testid="text-input-right-icon"]',
+			'[data-testid="first-name-right-icon"]',
 		) as HTMLButtonElement;
 
 		jest.spyOn(componentInstance.rightIconClicked, 'emit');

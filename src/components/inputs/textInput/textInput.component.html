@@ -1,6 +1,11 @@
 <div class="text-input">
 	@if (label()) {
-		<label class="text-input-label" [for]="inputId()" [class.is-disabled]="isDisabled()">
+		<label
+			class="text-input-label"
+			[attr.data-testid]="getDataTestId('label')"
+			[for]="inputId()"
+			[class.is-disabled]="isDisabled()"
+		>
 			{{ label() }}
 
 			<span
@@ -15,7 +20,7 @@
 
 	<div class="text-input-wrapper">
 		@if (leftIcon()) {
-			<div class="text-input-left-icon">
+			<div class="text-input-left-icon" [attr.data-testid]="getDataTestId('left-icon')">
 				<ng-container *ngComponentOutlet="leftIcon(); inputs: leftIconInputs()" />
 			</div>
 		}
@@ -33,6 +38,7 @@
 			[class.valid]="isValid()"
 			[class.error]="hasError()"
 			[aria-invalid]="hasError()"
+			[attr.data-testid]="getDataTestId('input')"
 			(blur)="blurred.emit($event)"
 			(copy)="preventCopyAndPaste($event)"
 			(cut)="preventCopyAndPaste($event)"
@@ -44,13 +50,13 @@
 				<button
 					type="button"
 					class="text-input-right-icon"
-					data-testid="text-input-right-icon"
+					[attr.data-testid]="getDataTestId('right-icon')"
 					(click)="rightIconClicked.emit($event)"
 				>
 					<ng-container *ngComponentOutlet="rightIcon(); inputs: rightIconInputs" />
 				</button>
 			} @else {
-				<div class="text-input-right-icon">
+				<div class="text-input-right-icon" [attr.data-testid]="getDataTestId('right-icon')">
 					<ng-container *ngComponentOutlet="rightIcon(); inputs: rightIconInputs" />
 				</div>
 			}
@@ -61,7 +67,7 @@
 		<div class="text-input-error">
 			<ctf-icon-exclamation-mark [width]="13" [height]="13" />
 
-			<span class="text-input-error-message" data-testid="text-input-error-message">
+			<span class="text-input-error-message" [attr.data-testid]="getDataTestId('error-message')">
 				{{ errorMessage() }}
 			</span>
 		</div>

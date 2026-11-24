@@ -122,4 +122,8 @@ export class TextInput {
 			event.preventDefault();
 		}
 	}
+
+	protected getDataTestId(element: string): string {
+		return `${this.inputId()}-${element}`;
+	}
 }
