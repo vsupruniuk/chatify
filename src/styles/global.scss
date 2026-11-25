@@ -5,8 +5,13 @@
 }
 
 html {
-  scroll-behavior: smooth;
   text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
