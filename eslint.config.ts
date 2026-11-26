@@ -68,6 +68,7 @@ export default defineConfig([
 			'@angular-eslint/component-class-suffix': 'off',
 
 			'@typescript-eslint/no-extraneous-class': 'off',
+			'@typescript-eslint/no-inferrable-types': 'off',
 		},
 	},
 ]);

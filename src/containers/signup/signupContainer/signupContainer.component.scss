@@ -1,0 +1,36 @@
+@use "styles/shared/mixins";
+@use "styles/shared/variables";
+
+.signup-container {
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+
+  &-header {
+    margin-bottom: 20px;
+  }
+
+  &-title {
+    @include mixins.header-h1;
+  }
+
+  &-description {
+    @include mixins.text-description;
+  }
+
+  &-wrapper {
+    padding: 24px 16px;
+
+    @include mixins.tablet {
+      padding: 32px;
+      border-radius: 1rem;
+      background-color: variables.$color-white;
+    }
+  }
+
+  &-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

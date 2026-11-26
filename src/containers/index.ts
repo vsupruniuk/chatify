@@ -1,1 +1,1 @@
-export * from './helloWorldTitle/helloWorldTitle.component';
+export * from '@containers/authHeader/authHeader.component';

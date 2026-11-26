@@ -1,0 +1,70 @@
+@use "sass:math";
+@use "styles/shared/variables";
+@use "styles/shared/mixins";
+
+.text-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &-label {
+    @include mixins.text-input-label;
+
+    &.is-disabled {
+      color: variables.$color-text-faint;
+    }
+
+    .is-required {
+      color: variables.$color-accent;
+    }
+
+    .is-optional {
+      color: variables.$color-text-faint;
+    }
+  }
+
+  &-wrapper {
+    position: relative;
+  }
+
+  &-left-icon {
+    position: absolute;
+    bottom: math.div(variables.$text-input-height - 15px, 2);
+    left: 12px;
+  }
+
+  &-right-icon {
+    position: absolute;
+    right: 12px;
+    bottom: math.div(variables.$text-input-height - 14px, 2);
+
+    padding: 0;
+    border: none;
+
+    background: transparent;
+  }
+
+  &-error {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+
+    &-message {
+      @include mixins.text-input-error-message;
+    }
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
+    @include mixins.input-default-styles;
+
+    &.with-left-icon {
+      @include mixins.input-left-icon;
+    }
+
+    &.with-right-icon {
+      @include mixins.input-right-icon;
+    }
+  }
+}

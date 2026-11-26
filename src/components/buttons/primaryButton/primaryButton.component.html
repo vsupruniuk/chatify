@@ -1,0 +1,10 @@
+<button
+	class="primary-button"
+	[type]="type()"
+	[disabled]="isDisabled()"
+	[class.loading]="isLoading()"
+	[attr.aria-disabled]="isDisabled()"
+	(click)="clicked.emit($event)"
+>
+	{{ text() }}
+</button>

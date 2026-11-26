@@ -21,6 +21,9 @@ const config: Config = {
 		'@enums/(.*)': '<rootDir>/src/enums/$1',
 		'@enums': '<rootDir>/src/enums/index',
 
+		'@environments/(.*)': '<rootDir>/src/environments/$1',
+		'@environments': '<rootDir>/src/environments/index',
+
 		'@helpers/(.*)': '<rootDir>/src/helpers/$1',
 		'@helpers': '<rootDir>/src/helpers/index',
 
@@ -29,6 +32,9 @@ const config: Config = {
 
 		'@services/(.*)': '<rootDir>/src/services/$1',
 		'@services': '<rootDir>/src/services/index',
+
+		'@state/(.*)': '<rootDir>/src/state/$1',
+		'@state': '<rootDir>/src/state/index',
 	},
 	verbose: true,
 	testEnvironment: 'jsdom',
@@ -44,7 +50,10 @@ const config: Config = {
 		'!src/**/*.d.ts',
 
 		'!src/configs/**',
+		'!src/environments/**',
 		'!src/enums/**',
+		'!src/state/**',
+		'!src/state/**',
 		'!src/tests/**',
 		'!src/types/**',
 	],

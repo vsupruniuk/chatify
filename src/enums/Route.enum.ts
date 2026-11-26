@@ -1,3 +1,5 @@
 export enum Route {
-	HELLO_WORLD = 'hello-world',
+	SIGNUP = 'signup',
+	LOGIN = 'login',
+	ACTIVATE_ACCOUNT = 'activate-account',
 }

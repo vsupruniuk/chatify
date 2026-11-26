@@ -1,0 +1,58 @@
+@use "styles/shared/variables";
+@use "styles/shared/functions";
+@use "styles/shared/mixins/typography" as typography-mixins;
+
+@mixin input-default-styles {
+  width: 100%;
+  height: variables.$text-input-height;
+  padding: variables.$text-input-padding;
+  border: variables.$text-input-border-width solid variables.$color-border;
+  border-radius: variables.$text-input-border-radius;
+
+  background: variables.$color-white;
+
+  transition: border-color variables.$transition-duration-default variables.$transition-function-default,
+    background-color variables.$transition-duration-default variables.$transition-function-default;
+
+  @include typography-mixins.text-input;
+
+  &::placeholder {
+    @include typography-mixins.text-input-placeholder;
+  }
+
+  &:hover {
+    border-color: variables.$color-text-faint;
+  }
+
+  &.valid {
+    border-color: functions.hex-with-opacity(variables.$color-accent, 0.55);
+  }
+
+  &:focus {
+    border-color: variables.$color-accent;
+  }
+
+  &.error {
+    border-color: variables.$color-error-light;
+    background-color: variables.$color-error-bg;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    border-color: variables.$color-border;
+    color: variables.$color-text-faint;
+    background: variables.$color-surface;
+
+    &::placeholder {
+      color: functions.hex-with-opacity(variables.$color-text-faint, 0.5);
+    }
+  }
+}
+
+@mixin input-left-icon {
+  padding-left: variables.$text-input-padding-with-icon;
+}
+
+@mixin input-right-icon {
+  padding-right: variables.$text-input-padding-with-icon;
+}

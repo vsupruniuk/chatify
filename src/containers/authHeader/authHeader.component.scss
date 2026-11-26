@@ -1,0 +1,20 @@
+@use "styles/shared/mixins";
+@use "styles/shared/variables";
+
+.auth-header {
+  margin-bottom: 24px;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid variables.$color-border;
+  background-color: variables.$color-white;
+
+  &-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: start;
+  }
+
+  &-title {
+    @include mixins.header-h2;
+  }
+}

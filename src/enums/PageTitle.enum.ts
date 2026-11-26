@@ -1,3 +1,5 @@
 export enum PageTitle {
-	HELLO_WORLD = 'Hello, World!',
+	SIGNUP = 'Sign up',
+	LOGIN = 'Log in',
+	ACTIVATE_ACCOUNT = 'Activate account',
 }

@@ -1,0 +1,39 @@
+// Breakpoints
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1280px;
+
+// Colors
+$color-accent: #31C48D;
+$color-accent-hover: #27A87A;
+$color-accent-active: #1E8C65;
+$color-accent-light: #E8FBF4;
+
+$color-text-primary: #111827;
+$color-text-secondary: #374151;
+$color-text-muted: #6B7280;
+$color-text-faint: #9CA3AF;
+
+$color-border: #E5E7EB;
+$color-surface: #F9FAFB;
+$color-white: #FFFFFF;
+
+$color-error: #EF4444;
+$color-error-light: #F87171;
+$color-error-bg: #FFF5F5;
+
+// Inputs
+$text-input-height: 44px;
+$text-input-padding: 0 14px;
+$text-input-padding-with-icon: 40px;
+$text-input-border-width: 2px;
+$text-input-border-radius: 12px;
+
+// Buttons
+$primary-button-heigh: 44px;
+$primary-button-padding: 0 20px;
+$primary-button-border-radius: 12px;
+
+// Transitions
+$transition-duration-default: 0.25s;
+$transition-function-default: ease-in-out;
+

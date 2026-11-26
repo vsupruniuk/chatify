@@ -1,0 +1,12 @@
+@use "styles/shared/mixins";
+
+.link-component {
+  @include mixins.text-link;
+
+  font-weight: 700;
+
+  &:hover,
+  &:active {
+    text-decoration: underline;
+  }
+}
